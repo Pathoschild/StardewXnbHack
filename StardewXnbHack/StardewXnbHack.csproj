@@ -20,6 +20,9 @@
     <Reference Include="BmFont">
       <HintPath>$(GamePath)\BmFont.dll</HintPath>
     </Reference>
+    <Reference Include="SMAPI.Toolkit">
+      <HintPath>$(GamePath)\smapi-internal\SMAPI.Toolkit.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

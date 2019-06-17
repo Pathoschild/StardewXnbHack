@@ -1,9 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Microsoft.Win32;
+using StardewModdingAPI.Toolkit;
 using StardewValley;
 using StardewXnbHack.Framework;
 using StardewXnbHack.Framework.Writers;
@@ -48,7 +47,8 @@ namespace StardewXnbHack
         public void Run()
         {
             // find game folder
-            this.GamePath = this.GetInstallPaths().FirstOrDefault(Directory.Exists);
+            ModToolkit toolkit = new ModToolkit();
+            this.GamePath = toolkit.GetGameFolders().FirstOrDefault()?.FullName;
             if (this.GamePath == null)
             {
                 this.PrintColor("Can't find Stardew Valley folder.", ConsoleColor.Red);
@@ -146,63 +146,6 @@ namespace StardewXnbHack
             Console.ForegroundColor = color;
             Console.WriteLine(message);
             Console.ResetColor();
-        }
-
-        /// <summary>The default file paths where Stardew Valley can be installed.</summary>
-        /// <remarks>Derived from the SMAPI installer.</remarks>
-        private IEnumerable<string> GetInstallPaths()
-        {
-            // default paths
-            foreach (string programFiles in new[] { @"C:\Program Files", @"C:\Program Files (x86)" })
-            {
-                yield return $@"{programFiles}\GalaxyClient\Games\Stardew Valley";
-                yield return $@"{programFiles}\GOG Galaxy\Games\Stardew Valley";
-                yield return $@"{programFiles}\Steam\steamapps\common\Stardew Valley";
-            }
-
-            // Windows registry
-            IDictionary<string, string> registryKeys = new Dictionary<string, string>
-            {
-                [@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 413150"] = "InstallLocation", // Steam
-                [@"SOFTWARE\WOW6432Node\GOG.com\Games\1453375253"] = "PATH", // GOG on 64-bit Windows
-            };
-            foreach (var pair in registryKeys)
-            {
-                string path = this.GetLocalMachineRegistryValue(pair.Key, pair.Value);
-                if (!string.IsNullOrWhiteSpace(path))
-                    yield return path;
-            }
-
-            // via Steam library path
-            string steamPath = this.GetCurrentUserRegistryValue(@"Software\Valve\Steam", "SteamPath");
-            if (steamPath != null)
-                yield return Path.Combine(steamPath.Replace('/', '\\'), @"steamapps\common\Stardew Valley");
-        }
-
-        /// <summary>Get the value of a key in the Windows HKLM registry.</summary>
-        /// <param name="key">The full path of the registry key relative to HKLM.</param>
-        /// <param name="name">The name of the value.</param>
-        private string GetLocalMachineRegistryValue(string key, string name)
-        {
-            RegistryKey localMachine = Environment.Is64BitOperatingSystem ? RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64) : Registry.LocalMachine;
-            RegistryKey openKey = localMachine.OpenSubKey(key);
-            if (openKey == null)
-                return null;
-            using (openKey)
-                return (string)openKey.GetValue(name);
-        }
-
-        /// <summary>Get the value of a key in the Windows HKCU registry.</summary>
-        /// <param name="key">The full path of the registry key relative to HKCU.</param>
-        /// <param name="name">The name of the value.</param>
-        private string GetCurrentUserRegistryValue(string key, string name)
-        {
-            RegistryKey currentuser = Environment.Is64BitOperatingSystem ? RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry64) : Registry.CurrentUser;
-            RegistryKey openKey = currentuser.OpenSubKey(key);
-            if (openKey == null)
-                return null;
-            using (openKey)
-                return (string)openKey.GetValue(name);
         }
 
         /// <summary>Get an initialised instance of Stardew Valley.</summary>
