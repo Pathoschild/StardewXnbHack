@@ -5,44 +5,21 @@
     <Platforms>x86</Platforms>
     <OutputType>Exe</OutputType>
 
-    <!--recognise XNA Framework DLLs in the GAC-->
-    <AssemblySearchPaths>$(AssemblySearchPaths);{GAC}</AssemblySearchPaths>
+    <CopyModReferencesToBuildOutput>True</CopyModReferencesToBuildOutput>
+    <EnableGameDebugging>False</EnableGameDebugging>
+    <EnableModDeploy>False</EnableModDeploy>
+    <EnableModZip>False</EnableModZip>
   </PropertyGroup>
 
-  <!-- find game path -->
-  <Import Condition="$(OS) == 'Windows_NT' AND Exists('$(USERPROFILE)\stardewvalley.targets')" Project="$(USERPROFILE)\stardewvalley.targets" />
-  <PropertyGroup>
-    <GamePath Condition="!Exists('$(GamePath)')">C:\Program Files\GalaxyClient\Games\Stardew Valley</GamePath>
-    <GamePath Condition="!Exists('$(GamePath)')">C:\Program Files\GOG Galaxy\Games\Stardew Valley</GamePath>
-    <GamePath Condition="!Exists('$(GamePath)')">C:\Program Files\Steam\steamapps\common\Stardew Valley</GamePath>
-
-    <GamePath Condition="!Exists('$(GamePath)')">C:\Program Files (x86)\GalaxyClient\Games\Stardew Valley</GamePath>
-    <GamePath Condition="!Exists('$(GamePath)')">C:\Program Files (x86)\GOG Galaxy\Games\Stardew Valley</GamePath>
-    <GamePath Condition="!Exists('$(GamePath)')">C:\Program Files (x86)\Steam\steamapps\common\Stardew Valley</GamePath>
-
-    <GamePath Condition="!Exists('$(GamePath)') AND '$(OS)' == 'Windows_NT'">$([MSBuild]::GetRegistryValueFromView('HKEY_LOCAL_MACHINE\SOFTWARE\GOG.com\Games\1453375253', 'PATH', null, RegistryView.Registry32))</GamePath>
-    <GamePath Condition="!Exists('$(GamePath)') AND '$(OS)' == 'Windows_NT'">$([MSBuild]::GetRegistryValueFromView('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 413150', 'InstallLocation', null, RegistryView.Registry64, RegistryView.Registry32))</GamePath>
-  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="Pathoschild.Stardew.ModBuildConfig" Version="3.0.0-beta.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
-    <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
-    <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
-    <Reference Include="Microsoft.Xna.Framework.Xact, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="BmFont">
       <HintPath>$(GamePath)\BmFont.dll</HintPath>
     </Reference>
-    <Reference Include="Stardew Valley">
-      <HintPath>$(GamePath)\Stardew Valley.exe</HintPath>
-    </Reference>
-    <Reference Include="StardewValley.GameData">
-      <HintPath>$(GamePath)\StardewValley.GameData.dll</HintPath>
-    </Reference>
-    <Reference Include="xTile">
-      <HintPath>$(GamePath)\xTile.dll</HintPath>
-    </Reference>
   </ItemGroup>
+
 </Project>

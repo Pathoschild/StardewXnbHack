@@ -6,7 +6,6 @@ users, [xnbcli is recommended](https://stardewvalleywiki.com/Modding:Editing_XNB
 instead.
 
 ## Compared to other XNB unpackers
-
 &nbsp;                | Stardew XNB Hack | [xnbcli](https://github.com/LeonBlade/xnbcli/) | [XNBExtract](https://community.playstarbound.com/threads/110976)
 --------------------- | ---------------- | ------ | -----------
 Supported asset types | ✓ images<br />✓ maps<br />✓ dictionary data<br />✓ font texture<br />✓ font XML data<br />✓ structured data | ✓ images<br />✓ maps<br />✓ dictionary data<br />✓ font textures<br />✓ font XML data<br />❑ structured data | ✓ images<br />✓ maps<br />✓ dictionary data<br />✓ font textures<br />❑ font XML data<br />❑ structured data
@@ -20,6 +19,7 @@ License | MIT | GPL | n/a
 
 ## Usage
 1. Open the project in Visual Studio.
-2. Click _Build > Build Solution_. It should find the Stardew Valley folder automatically.
+2. Click _Build > Build Solution_. (If it doesn't find the Stardew Valley folder automatically, see
+   [_game path_ in the mod build package readme](https://github.com/Pathoschild/SMAPI/blob/develop/docs/mod-build-config.md#game-path).)
 3. Click _Debug > Start without debugging_ to run the unpacker.
 4. The entire `Content` folder for the detected game will be unpacked into `Content (unpacked)`.
