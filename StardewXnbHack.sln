@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29001.49
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StardewXnbHack", "StardewXnbHack\StardewXnbHack.csproj", "{F1512B6A-75A9-4425-B4EE-26D50E7075C8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{5EDB5467-BFEE-4122-8764-FA41B4E59D7F}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F1512B6A-75A9-4425-B4EE-26D50E7075C8}.Debug|x86.ActiveCfg = Debug|x86
+		{F1512B6A-75A9-4425-B4EE-26D50E7075C8}.Debug|x86.Build.0 = Debug|x86
+		{F1512B6A-75A9-4425-B4EE-26D50E7075C8}.Release|x86.ActiveCfg = Release|x86
+		{F1512B6A-75A9-4425-B4EE-26D50E7075C8}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {ED3F1CBF-3651-49A3-9652-9A8BCD952184}
+	EndGlobalSection
+EndGlobal

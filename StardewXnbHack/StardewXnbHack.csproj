@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net452</TargetFramework>
+    <Platforms>x86</Platforms>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+</Project>
