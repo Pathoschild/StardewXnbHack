@@ -10,12 +10,14 @@ instead.
 --------------------- | ---------------- | ------ | -----------
 Supported asset types | ✓ images<br />✓ maps<br />✓ dictionary data<br />✓ font texture<br />✓ font XML data<br />✓ structured data | ✓ images<br />✓ maps<br />✓ dictionary data<br />✓ font textures<br />✓ font XML data<br />❑ structured data | ✓ images<br />✓ maps<br />✓ dictionary data<br />✓ font textures<br />❑ font XML data<br />❑ structured data
 Export formats | ✓ `.png` for images<br />✓ `.tbin` for maps<br />✓ `.json` for data ([CP](https://www.nexusmods.com/stardewvalley/mods/1915)-compatible) | ✓ `.png` for images<br />✓ `.tbin` for maps<br />❑ `.json` for data (with added metadata) | ✓ `.png` for images<br />✓ `.tbin` for maps<br />❑ `.yaml` for data
-Supported platforms | ✓ Windows<br />✓ Linux<br />✓ Mac | ✓ Windows<br />✓ Linux<br />✓ Mac | ✓ Windows<br />❑ Linux<br />❑ Mac
+Supported platforms | ✓ Windows<br />≈ Linux¹<br />≈ Mac¹ | ✓ Windows<br />✓ Linux<br />✓ Mac | ✓ Windows<br />❑ Linux<br />❑ Mac
 Supported operations | ✓ unpack<br />❑ pack | ✓ unpack<br />✓ pack  (uncompressed) | ✓ unpack<br />✓ pack
 User-friendly | ❑ run in Visual Studio<br />❑ unpack `Content` folder<br />❑ no command line | ✓ run script<br />✓ unpack specific files<br />✓ command line | ✓ run script<br />✓ unpack specific files<br />✓ command line
 Maintainable | ✓ simple hack, easy to update | ❑ complex | ❑ complex, closed-source
 Sample unpack time<br />(full `Content` folder) | ≈0m 40s | ≈6m 5s | ≈2m 20s
 License | MIT | GPL | n/a
+
+¹ Some sprite font textures can't be unpacked on Linux/Mac; everything else should work.
 
 ## Usage
 1. Install [SMAPI 3.0 or later](https://smapi.io/). (The unpacker uses the SMAPI toolkit.)

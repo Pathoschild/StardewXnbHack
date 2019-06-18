@@ -1,8 +1,10 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using StardewModdingAPI.Toolkit;
+using StardewModdingAPI.Toolkit.Utilities;
 using StardewValley;
 using StardewXnbHack.Framework;
 using StardewXnbHack.Framework.Writers;
@@ -15,15 +17,6 @@ namespace StardewXnbHack
         /*********
         ** Fields
         *********/
-        /// <summary>The folder containing the executable file.</summary>
-        private string GamePath;
-
-        /// <summary>The absolute path to the folder containing XNB files to unpack.</summary>
-        private string ContentPath => Path.Combine(this.GamePath, "Content");
-
-        /// <summary>The absolute path to the folder in which to save unpacked files.</summary>
-        private string ExportPath => Path.Combine(this.GamePath, "Content (unpacked)");
-
         /// <summary>The asset writers which support saving data to disk.</summary>
         private readonly IAssetWriter[] AssetWriters = {
             new MapWriter(),
@@ -46,29 +39,41 @@ namespace StardewXnbHack
         /// <summary>Unpack all assets in the content folder and store them in the output folder.</summary>
         public void Run()
         {
-            // find game folder
-            ModToolkit toolkit = new ModToolkit();
-            this.GamePath = toolkit.GetGameFolders().FirstOrDefault()?.FullName;
-            if (this.GamePath == null)
+            // get game info
+            Platform platform = EnvironmentUtility.DetectPlatform();
+            string gamePath = new ModToolkit().GetGameFolders().FirstOrDefault()?.FullName;
+            if (gamePath == null)
             {
                 this.PrintColor("Can't find Stardew Valley folder.", ConsoleColor.Red);
                 return;
             }
-            Console.WriteLine($"Found game folder: {this.GamePath}.");
+            Console.WriteLine($"Found game folder: {gamePath}.");
             Console.WriteLine();
+
+            // get import/export paths
+            string contentPath = Path.Combine(gamePath, "Content");
+            string exportPath = Path.Combine(gamePath, "Content (unpacked)");
+
+            // symlink files on Linux/Mac
+            if (platform == Platform.Linux || platform == Platform.Mac)
+            {
+                Process.Start("ln", $"-sf \"{Path.Combine(gamePath, "Content")}\"");
+                Process.Start("ln", $"-sf \"{Path.Combine(gamePath, "lib")}\"");
+                Process.Start("ln", $"-sf \"{Path.Combine(gamePath, "lib64")}\"");
+            }
 
             // load game
             ConsoleProgressBar progressBar;
             Console.WriteLine("Loading game instance...");
             Console.ForegroundColor = ConsoleColor.DarkGray;
-            using (Game1 game = this.GetGameInstance())
+            using (Game1 game = this.GetGameInstance(platform, contentPath))
             {
                 Console.ResetColor();
                 Console.WriteLine();
                 Console.WriteLine("Unpacking files...");
 
                 // collect files
-                DirectoryInfo contentDir = new DirectoryInfo(this.ContentPath);
+                DirectoryInfo contentDir = new DirectoryInfo(contentPath);
                 FileInfo[] files = contentDir.EnumerateFiles("*.xnb", SearchOption.AllDirectories).ToArray();
                 progressBar = new ConsoleProgressBar(files.Length);
 
@@ -76,9 +81,9 @@ namespace StardewXnbHack
                 foreach (FileInfo file in files)
                 {
                     // prepare paths
-                    string assetName = file.FullName.Substring(this.ContentPath.Length + 1, file.FullName.Length - this.ContentPath.Length - 5); // remove root path + .xnb extension
-                    string exportPath = Path.Combine(this.ExportPath, assetName);
-                    Directory.CreateDirectory(Path.GetDirectoryName(exportPath));
+                    string assetName = file.FullName.Substring(contentPath.Length + 1, file.FullName.Length - contentPath.Length - 5); // remove root path + .xnb extension
+                    string fileExportPath = Path.Combine(exportPath, assetName);
+                    Directory.CreateDirectory(Path.GetDirectoryName(fileExportPath));
 
                     // show progress bar
                     progressBar.Increment();
@@ -108,13 +113,13 @@ namespace StardewXnbHack
                         {
                             progressBar.Erase();
                             this.PrintColor($"{assetName}.xnb ({asset.GetType().Name}) isn't a supported asset type.", ConsoleColor.DarkYellow);
-                            File.Copy(file.FullName, $"{exportPath}.xnb", overwrite: true);
+                            File.Copy(file.FullName, $"{fileExportPath}.xnb", overwrite: true);
                         }
-                        else if (!writer.TryWriteFile(asset, exportPath, assetName, out string writeError))
+                        else if (!writer.TryWriteFile(asset, fileExportPath, assetName, platform, out string writeError))
                         {
                             progressBar.Erase();
                             this.PrintColor($"{assetName}.xnb ({asset.GetType().Name}) could not be saved: {writeError}.", ConsoleColor.DarkYellow);
-                            File.Copy(file.FullName, $"{exportPath}.xnb", overwrite: true);
+                            File.Copy(file.FullName, $"{fileExportPath}.xnb", overwrite: true);
                         }
                     }
                     catch (Exception ex)
@@ -131,7 +136,7 @@ namespace StardewXnbHack
             }
 
             progressBar.Erase();
-            Console.WriteLine($"Done! Unpacked files to {this.ExportPath}.");
+            Console.WriteLine($"Done! Unpacked files to {exportPath}.");
         }
 
 
@@ -149,14 +154,23 @@ namespace StardewXnbHack
         }
 
         /// <summary>Get an initialised instance of Stardew Valley.</summary>
-        private Game1 GetGameInstance()
+        /// <param name="platform">The OS running the unpacker.</param>
+        /// <param name="contentPath">The path to the content folder to import.</param>
+        private Game1 GetGameInstance(Platform platform, string contentPath)
         {
             Game1 game = new Game1();
-            game.Content.RootDirectory = this.ContentPath;
-            MethodInfo startGameLoop = typeof(Game1).GetMethod("StartGameLoop", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
-            if (startGameLoop == null)
-                throw new InvalidOperationException("Can't locate game method 'StartGameLoop' to initialise internal game instance.");
-            startGameLoop.Invoke(game, new object[0]);
+
+            if (platform == Platform.Windows)
+            {
+                game.Content.RootDirectory = contentPath;
+                MethodInfo startGameLoop = typeof(Game1).GetMethod("StartGameLoop", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
+                if (startGameLoop == null)
+                    throw new InvalidOperationException("Can't locate game method 'StartGameLoop' to initialise internal game instance.");
+                startGameLoop.Invoke(game, new object[0]);
+            }
+            else
+                game.RunOneFrame();
+
             return game;
         }
     }

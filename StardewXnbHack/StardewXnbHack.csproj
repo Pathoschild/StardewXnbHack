@@ -9,6 +9,8 @@
     <EnableGameDebugging>False</EnableGameDebugging>
     <EnableModDeploy>False</EnableModDeploy>
     <EnableModZip>False</EnableModZip>
+
+    <DefineConstants Condition="$(OS) == 'Windows_NT'">$(DefineConstants);IS_WINDOWS</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

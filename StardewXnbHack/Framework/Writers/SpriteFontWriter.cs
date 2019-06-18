@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
+using StardewModdingAPI.Toolkit.Utilities;
 
 namespace StardewXnbHack.Framework.Writers
 {
@@ -25,26 +26,28 @@ namespace StardewXnbHack.Framework.Writers
         /// <param name="asset">The asset value.</param>
         /// <param name="toPathWithoutExtension">The absolute path to the export file, without the file extension.</param>
         /// <param name="relativePath">The relative path within the content folder.</param>
+        /// <param name="platform">The operating system running the unpacker.</param>
         /// <param name="error">An error phrase indicating why writing to disk failed (if applicable).</param>
         /// <returns>Returns whether writing to disk completed successfully.</returns>
-        public bool TryWriteFile(object asset, string toPathWithoutExtension, string relativePath, out string error)
+        public bool TryWriteFile(object asset, string toPathWithoutExtension, string relativePath, Platform platform, out string error)
         {
             SpriteFont font = (SpriteFont)asset;
 
-            // get texture
-            Texture2D texture = (Texture2D)font.GetType().GetField("textureValue", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(font);
-            if (texture == null)
-            {
-                error = "can't retrieve font texture field";
-                return false;
-            }
-
             // save texture
+            Texture2D texture = this.RequireField<Texture2D>(font, platform == Platform.Windows ? "textureValue" : "_texture");
             using (Stream stream = File.Create($"{toPathWithoutExtension}.png"))
                 texture.SaveAsPng(stream, texture.Width, texture.Height);
 
             // save font data
-            File.WriteAllText($"{toPathWithoutExtension}.json", JsonConvert.SerializeObject(asset, this.GetSpriteFontSettings()));
+            var data = new
+            {
+                font.LineSpacing,
+                font.Spacing,
+                font.DefaultCharacter,
+                font.Characters,
+                Glyphs = this.GetGlyphs(font)
+            };
+            File.WriteAllText($"{toPathWithoutExtension}.json", JsonConvert.SerializeObject(data, Formatting.Indented));
 
             error = null;
             return true;
@@ -54,40 +57,54 @@ namespace StardewXnbHack.Framework.Writers
         /*********
         ** Private methods
         *********/
-        /// <summary>Get the JSON settings to serialise a <see cref="SpriteFont"/> instance.</summary>
-        private JsonSerializerSettings GetSpriteFontSettings()
+        /// <summary>Get the font glyph data for a MonoGame font.</summary>
+        /// <param name="font">The sprite font.</param>
+#if IS_WINDOWS
+        private IDictionary<char, object> GetGlyphs(SpriteFont font)
         {
-            return new JsonSerializerSettings
+            // get internal sprite data
+            IList<Rectangle> glyphData = this.RequireField<List<Rectangle>>(font, "glyphData");
+            IList<Rectangle> croppingData = this.RequireField<List<Rectangle>>(font, "croppingData");
+            IList<Vector3> kerning = this.RequireField<List<Vector3>>(font, "kerning");
+
+            // replicate MonoGame structure for consistency (and readability)
+            IDictionary<char, object> glyphs = new Dictionary<char, object>();
+            for (int i = 0; i < font.Characters.Count; i++)
             {
-                Formatting = Formatting.Indented,
-                ContractResolver = new SpriteFontContractResolver()
-            };
-        }
-
-
-        /*********
-        ** Private classes
-        *********/
-        /// <summary>A JSON contract resolver which adds applicable private fields when serialising a <see cref="SpriteFont"/> instance.</summary>
-        public class SpriteFontContractResolver : DefaultContractResolver
-        {
-            /// <summary>Get the properties to serialise.</summary>
-            /// <param name="type">The type to create properties for.</param>
-            /// <param name="memberSerialization">The member serialization mode for the type.</param>
-            protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
-            {
-                IList<JsonProperty> properties = base.CreateProperties(type, memberSerialization);
-
-                foreach (string fieldName in new[] { "glyphData", "croppingData", "kerning" })
+                char ch = font.Characters[i];
+                glyphs[ch] = new
                 {
-                    FieldInfo field = type.GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-                    var prop = base.CreateProperty(field, memberSerialization);
-                    prop.Writable = true;
-                    prop.Readable = true;
-                    properties.Add(prop);
-                }
-                return properties;
+                    BoundsInTexture = glyphData[i],
+                    Cropping = croppingData[i],
+                    Character = ch,
+
+                    LeftSideBearing = kerning[i].X,
+                    Width = kerning[i].Y,
+                    RightSideBearing = kerning[i].Z,
+
+                    WidthIncludingBearings = kerning[i].X + kerning[i].Y + kerning[i].Z
+                };
             }
+            return glyphs;
+        }
+#else
+        private IDictionary<char, SpriteFont.Glyph> GetGlyphs(SpriteFont font)
+        {
+            return font.GetGlyphs();
+        }
+#endif
+
+        /// <summary>Get a required font field using reflection.</summary>
+        /// <typeparam name="T">The field type.</typeparam>
+        /// <param name="font">The font instance for which to get a value.</param>
+        /// <param name="name">The field name.</param>
+        private T RequireField<T>(SpriteFont font, string name)
+        {
+            FieldInfo field = typeof(SpriteFont).GetField(name, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            if (field == null)
+                throw new InvalidOperationException($"Can't access {nameof(SpriteFont)}.{name} field");
+
+            return (T)field.GetValue(font);
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.IO;
 using Microsoft.Xna.Framework.Graphics;
+using StardewModdingAPI.Toolkit.Utilities;
 
 namespace StardewXnbHack.Framework.Writers
 {
@@ -20,9 +21,10 @@ namespace StardewXnbHack.Framework.Writers
         /// <param name="asset">The asset value.</param>
         /// <param name="toPathWithoutExtension">The absolute path to the export file, without the file extension.</param>
         /// <param name="relativePath">The relative path within the content folder.</param>
+        /// <param name="platform">The operating system running the unpacker.</param>
         /// <param name="error">An error phrase indicating why writing to disk failed (if applicable).</param>
         /// <returns>Returns whether writing to disk completed successfully.</returns>
-        public bool TryWriteFile(object asset, string toPathWithoutExtension, string relativePath, out string error)
+        public bool TryWriteFile(object asset, string toPathWithoutExtension, string relativePath, Platform platform, out string error)
         {
             Texture2D texture = (Texture2D)asset;
 
