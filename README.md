@@ -20,9 +20,21 @@ License | MIT | GPL | n/a
 ¹ Some sprite font textures can't be unpacked on Linux/Mac; everything else should work.
 
 ## Usage
+### Compile the code
 1. Install [SMAPI 3.0 or later](https://smapi.io/). (The unpacker uses the SMAPI toolkit.)
 2. Open the project in Visual Studio.
 3. Click _Build > Build Solution_. (If it doesn't find the Stardew Valley folder automatically, see
-   [_game path_ in the mod build package readme](https://github.com/Pathoschild/SMAPI/blob/develop/docs/mod-build-config.md#game-path).)
-4. Click _Debug > Start without debugging_ to run the unpacker.
-5. The entire `Content` folder for the detected game will be unpacked into `Content (unpacked)`.
+   [_game path_ in the mod build package readme](https://smapi.io/package/custom-game-path).)
+4. See the compiled files in the project's `bin` folder.
+
+### Run the tool
+Just run `StardewXnbHack.exe` (or click _Debug > Start without debugging_ in Visual Studio) to
+unpack with the default options. You can also call the app with command-line arguments to change
+options, like `./StardewXnbHack.exe yaml` to use the YAML format.
+
+Supported command-line arguments:
+
+argument | usage
+-------- | -----
+`json`   | Save data files to JSON (default).
+`yaml`   | Save data files to YAML.

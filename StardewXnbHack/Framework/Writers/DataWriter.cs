@@ -1,20 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Newtonsoft.Json;
 using StardewModdingAPI.Toolkit.Utilities;
 
 namespace StardewXnbHack.Framework.Writers
 {
     /// <summary>Writes <see cref="Dictionary{TKey,TValue}"/> and <see cref="List{T}"/> assets to disk.</summary>
-    internal class DataWriter : IAssetWriter
+    internal class DataWriter : BaseAssetWriter
     {
         /*********
         ** Public methods
         *********/
         /// <summary>Whether the writer can handle a given asset.</summary>
         /// <param name="asset">The asset value.</param>
-        public bool CanWrite(object asset)
+        public override bool CanWrite(object asset)
         {
             Type type = asset.GetType();
             type = type.IsGenericType ? type.GetGenericTypeDefinition() : type;
@@ -27,12 +26,12 @@ namespace StardewXnbHack.Framework.Writers
         /// <param name="toPathWithoutExtension">The absolute path to the export file, without the file extension.</param>
         /// <param name="relativePath">The relative path within the content folder.</param>
         /// <param name="platform">The operating system running the unpacker.</param>
+        /// <param name="dataFormat">The expected output format for data files.</param>
         /// <param name="error">An error phrase indicating why writing to disk failed (if applicable).</param>
         /// <returns>Returns whether writing to disk completed successfully.</returns>
-        public bool TryWriteFile(object asset, string toPathWithoutExtension, string relativePath, Platform platform, out string error)
+        public override bool TryWriteFile(object asset, string toPathWithoutExtension, string relativePath, Platform platform, DataFormat dataFormat, out string error)
         {
-            string json = JsonConvert.SerializeObject(asset, Formatting.Indented);
-            File.WriteAllText($"{toPathWithoutExtension}.json", json);
+            File.WriteAllText($"{toPathWithoutExtension}.{this.GetExtension(dataFormat)}", this.FormatData(asset, dataFormat));
 
             error = null;
             return true;
