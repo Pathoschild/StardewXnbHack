@@ -21,16 +21,19 @@ License | MIT | GPL | n/a
 
 ## Usage
 ### Compile the code
-1. Install [SMAPI 3.0 or later](https://smapi.io/). (The unpacker uses the SMAPI toolkit.)
-2. Open the project in Visual Studio.
+1. Install the latest version of [SMAPI](https://smapi.io/). (The unpacker uses the SMAPI toolkit.)
+2. Open the `.csproj` project file in [Visual Studio](https://visualstudio.microsoft.com/vs/).
 3. Click _Build > Build Solution_. (If it doesn't find the Stardew Valley folder automatically, see
-   [_game path_ in the mod build package readme](https://smapi.io/package/custom-game-path).)
+   [_custom game path_ in the mod build package readme](https://smapi.io/package/custom-game-path).)
 4. See the compiled files in the project's `bin` folder.
 
 ### Run the tool
 Just run `StardewXnbHack.exe` (or click _Debug > Start without debugging_ in Visual Studio) to
-unpack with the default options. You can also call the app with command-line arguments to change
-options, like `./StardewXnbHack.exe yaml` to use the YAML format.
+unpack with the default options. This will export the files to a `Content (unpacked)` folder in the
+game folder.
+
+You can also call the app with command-line arguments to change options, like `./StardewXnbHack.exe
+yaml` to use the YAML format.
 
 Supported command-line arguments:
 
