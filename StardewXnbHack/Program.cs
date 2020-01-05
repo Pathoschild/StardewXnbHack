@@ -17,9 +17,6 @@ namespace StardewXnbHack
         /*********
         ** Fields
         *********/
-        /// <summary>The write format to output.</summary>
-        private static readonly DataFormat DefaultDataFormat = DataFormat.Json;
-
         /// <summary>The asset writers which support saving data to disk.</summary>
         private readonly IAssetWriter[] AssetWriters = {
             new MapWriter(),
@@ -37,23 +34,11 @@ namespace StardewXnbHack
         /// <param name="args">The arguments received by the app.</param>
         static void Main(string[] args)
         {
-            // parse arguments
-            DataFormat format = Program.DefaultDataFormat;
-            foreach (string arg in args)
-            {
-                if (Enum.TryParse(arg, true, out DataFormat parsedFormat))
-                    format = parsedFormat;
-                else
-                    Console.WriteLine($"Unknown argument '{arg}'.");
-            }
-
-            // run script
-            new Program().Run(format);
+            new Program().Run();
         }
 
         /// <summary>Unpack all assets in the content folder and store them in the output folder.</summary>
-        /// <param name="format">The preferred format for data files.</param>
-        public void Run(DataFormat format)
+        public void Run()
         {
             // get game info
             Platform platform = EnvironmentUtility.DetectPlatform();
@@ -64,7 +49,6 @@ namespace StardewXnbHack
                 return;
             }
             Console.WriteLine($"Found game folder: {gamePath}.");
-            Console.WriteLine($"Using data format: {format}.");
             Console.WriteLine();
 
             // get import/export paths
@@ -132,7 +116,7 @@ namespace StardewXnbHack
                             this.PrintColor($"{assetName}.xnb ({asset.GetType().Name}) isn't a supported asset type.", ConsoleColor.DarkYellow);
                             File.Copy(file.FullName, $"{fileExportPath}.xnb", overwrite: true);
                         }
-                        else if (!writer.TryWriteFile(asset, fileExportPath, assetName, platform, format, out string writeError))
+                        else if (!writer.TryWriteFile(asset, fileExportPath, assetName, platform, out string writeError))
                         {
                             progressBar.Erase();
                             this.PrintColor($"{assetName}.xnb ({asset.GetType().Name}) could not be saved: {writeError}.", ConsoleColor.DarkYellow);
