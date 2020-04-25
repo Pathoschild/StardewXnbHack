@@ -23,3 +23,4 @@ _ReSharper*/
 **/packages/*
 *.nuget.props
 *.nuget.targets
+.DS_Store
