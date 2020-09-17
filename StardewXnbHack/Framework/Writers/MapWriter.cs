@@ -16,7 +16,7 @@ namespace StardewXnbHack.Framework.Writers
         *********/
         /// <summary>The actual size of a tile in the tilesheet.</summary>
         const int TileSize = Game1.tileSize / Game1.pixelZoom;
-
+        public static string[] MapFormatExtensions { get; set; } = new string[] { "tbin" };
 
         /*********
         ** Public methods
@@ -48,13 +48,17 @@ namespace StardewXnbHack.Framework.Writers
             }
 
             // save file
-            using (Stream stream = File.Create($"{toPathWithoutExtension}.tbin"))
-                xTile.Format.FormatManager.Instance.BinaryFormat.Store(map, stream);
+            foreach (string extension in MapFormatExtensions)
+            {
+                var format = xTile.Format.FormatManager.Instance.GetMapFormatByExtension(extension);
 
-            // undo tile size changes
-            foreach (var layer in map.Layers)
-                layer.TileSize = tileSizes[layer];
+                using (Stream stream = File.Create($"{toPathWithoutExtension}.{extension}"))
+                    format.Store(map, stream);
 
+                // undo tile size changes
+                foreach (var layer in map.Layers)
+                    layer.TileSize = tileSizes[layer];
+            }
             error = null;
             return true;
         }
