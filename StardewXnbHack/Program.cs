@@ -71,37 +71,8 @@ namespace StardewXnbHack
             {
                 Console.ResetColor();
                 Console.WriteLine();
-                Console.WriteLine("Choose a map format to export to:");
-                Console.WriteLine();
-                Console.Write("   [1] ");
-                Console.WriteLine("tbin");
-                Console.Write("   [2] ");
-                Console.WriteLine("tmx");
-                Console.Write("   [3] ");
-                Console.WriteLine("both");
-                Console.WriteLine();
-
-                string[] options = new[] { "1", "2", "3" };
-
-                while (true)
-                {
-                    Console.WriteLine("Type 1, 2, or 3 then press enter.");
-                    string input = Console.ReadLine()?.Trim().ToLowerInvariant();
-                    if (!options.Contains(input))
-                    {
-                        Console.WriteLine($"That's not a valid option.");
-                        continue;
-                    }
-
-                    if (input == "2")
-                        MapWriter.MapFormatExtensions = new string[] { "tmx" };
-                    else if (input == "3")
-                        MapWriter.MapFormatExtensions = new string[] { "tbin", "tmx" };
-                    break;
-                }
-
-                Console.WriteLine();
                 Console.WriteLine("Unpacking files...");
+
                 // init TMX support
                 xTile.Format.FormatManager.Instance.RegisterMapFormat(new TMXTile.TMXFormat(Game1.tileSize / Game1.pixelZoom, Game1.tileSize / Game1.pixelZoom, Game1.pixelZoom, Game1.pixelZoom));
 
