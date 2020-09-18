@@ -67,10 +67,6 @@ namespace StardewXnbHack
             ConsoleProgressBar progressBar;
             Console.WriteLine("Loading game instance...");
             Console.ForegroundColor = ConsoleColor.DarkGray;
-
-            // init TMX support
-            xTile.Format.FormatManager.Instance.RegisterMapFormat(new TMXTile.TMXFormat(Game1.tileSize / Game1.pixelZoom, Game1.tileSize / Game1.pixelZoom, Game1.pixelZoom, Game1.pixelZoom));
-
             using (Game1 game = this.GetGameInstance(platform, contentPath))
             {
                 Console.ResetColor();
