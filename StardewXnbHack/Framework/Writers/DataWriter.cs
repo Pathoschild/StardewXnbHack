@@ -6,7 +6,7 @@ using StardewModdingAPI.Toolkit.Utilities;
 namespace StardewXnbHack.Framework.Writers
 {
     /// <summary>Writes <see cref="Dictionary{TKey,TValue}"/> and <see cref="List{T}"/> assets to disk.</summary>
-    internal class DataWriter : BaseAssetWriter
+    public class DataWriter : BaseAssetWriter
     {
         /*********
         ** Public methods

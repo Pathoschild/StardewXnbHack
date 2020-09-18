@@ -5,26 +5,33 @@
     <Platforms>x86</Platforms>
     <OutputType>Exe</OutputType>
 
-    <CopyModReferencesToBuildOutput>True</CopyModReferencesToBuildOutput>
+    <CopyModReferencesToBuildOutput>False</CopyModReferencesToBuildOutput>
     <EnableGameDebugging>False</EnableGameDebugging>
     <EnableModDeploy>False</EnableModDeploy>
     <EnableModZip>False</EnableModZip>
-
-    <DefineConstants Condition="$(OS) == 'Windows_NT'">$(DefineConstants);IS_WINDOWS</DefineConstants>
+    
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Pathoschild.Stardew.ModBuildConfig" Version="3.1.0" />
-    <PackageReference Include="Platonymous.TMXTile" Version="1.4.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="Newtonsoft">
+      <HintPath>$(GamePath)\smapi-internal\Newtonsoft.Json.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
     <Reference Include="BmFont">
       <HintPath>$(GamePath)\BmFont.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="SMAPI.Toolkit">
       <HintPath>$(GamePath)\smapi-internal\SMAPI.Toolkit.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="TMXTile">
+      <HintPath>$(GamePath)\smapi-internal\TMXTile.dll</HintPath>
+      <Private>false</Private>
     </Reference>
   </ItemGroup>
 

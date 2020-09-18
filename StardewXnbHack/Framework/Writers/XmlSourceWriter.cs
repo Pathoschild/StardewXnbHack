@@ -5,7 +5,7 @@ using StardewModdingAPI.Toolkit.Utilities;
 namespace StardewXnbHack.Framework.Writers
 {
     /// <summary>Writes <see cref="XmlSource"/> assets to disk.</summary>
-    internal class XmlSourceWriter : BaseAssetWriter
+    public class XmlSourceWriter : BaseAssetWriter
     {
         /*********
         ** Public methods
