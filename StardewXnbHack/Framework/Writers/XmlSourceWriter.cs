@@ -27,7 +27,7 @@ namespace StardewXnbHack.Framework.Writers
         public override bool TryWriteFile(object asset, string toPathWithoutExtension, string relativePath, Platform platform, out string error)
         {
             XmlSource value = (XmlSource)asset;
-            File.WriteAllText($"{toPathWithoutExtension}.xml", value.Source);
+            File.WriteAllText($"{toPathWithoutExtension}.fnt", value.Source);
 
             error = null;
             return true;
