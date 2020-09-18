@@ -48,8 +48,9 @@ namespace StardewXnbHack.Framework.Writers
             }
 
             // save file
+            if(xTile.Format.FormatManager.Instance.GetMapFormatByExtension("tmx") is TMXTile.TMXFormat tmx)
             using (Stream stream = File.Create($"{toPathWithoutExtension}.tmx"))
-                xTile.Format.FormatManager.Instance.GetMapFormatByExtension("tmx").Store(map, stream);
+                    tmx.Store(map, stream, TMXTile.DataEncodingType.CSV);
 
             // undo tile size changes
             foreach (var layer in map.Layers)
