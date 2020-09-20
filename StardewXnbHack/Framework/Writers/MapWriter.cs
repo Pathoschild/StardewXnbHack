@@ -30,7 +30,6 @@ namespace StardewXnbHack.Framework.Writers
         {
             // init TMX support
             this.Format = new TMXFormat(Game1.tileSize / Game1.pixelZoom, Game1.tileSize / Game1.pixelZoom, Game1.pixelZoom, Game1.pixelZoom);
-            FormatManager.Instance.RegisterMapFormat(this.Format);
         }
 
         /// <summary>Whether the writer can handle a given asset.</summary>
