@@ -3,7 +3,7 @@ using StardewModdingAPI.Toolkit.Utilities;
 namespace StardewXnbHack.Framework.Writers
 {
     /// <summary>Writes assets assets to disk.</summary>
-    internal interface IAssetWriter
+    public interface IAssetWriter
     {
         /*********
         ** Methods

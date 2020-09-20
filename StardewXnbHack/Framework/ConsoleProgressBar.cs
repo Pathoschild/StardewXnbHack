@@ -3,19 +3,19 @@ using System;
 namespace StardewXnbHack.Framework
 {
     /// <summary>Manages a progress bar written to the console.</summary>
-    internal class ConsoleProgressBar
+    public class ConsoleProgressBar
     {
         /*********
         ** Fields
         *********/
         /// <summary>The total number of steps to perform.</summary>
-        private readonly int TotalSteps;
+        protected readonly int TotalSteps;
 
         /// <summary>The current step being performed.</summary>
-        private int CurrentStep;
+        protected int CurrentStep;
 
         /// <summary>The last line to which the progress bar was output, if any.</summary>
-        private int OutputLine = -1;
+        protected int OutputLine = -1;
 
 
         /*********
@@ -29,7 +29,7 @@ namespace StardewXnbHack.Framework
         }
 
         /// <summary>Increment the current step.</summary>
-        public void Increment()
+        public virtual void Increment()
         {
             this.CurrentStep++;
         }
@@ -37,7 +37,7 @@ namespace StardewXnbHack.Framework
         /// <summary>Print a progress bar to the console.</summary>
         /// <param name="message">The message to print.</param>
         /// <param name="removePrevious">Whether to remove the previously output progress bar.</param>
-        public void Print(string message, bool removePrevious = true)
+        public virtual void Print(string message, bool removePrevious = true)
         {
             if (removePrevious)
                 this.Erase();
@@ -53,7 +53,7 @@ namespace StardewXnbHack.Framework
 
         /// <summary>Remove the last progress bar written to the console.</summary>
         /// <remarks>Derived from <a href="https://stackoverflow.com/a/8946847/262123" />.</remarks>
-        public void Erase()
+        public virtual void Erase()
         {
             if (this.OutputLine == -1)
                 return;

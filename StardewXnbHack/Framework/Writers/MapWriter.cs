@@ -9,7 +9,7 @@ using xTile.Layers;
 namespace StardewXnbHack.Framework.Writers
 {
     /// <summary>Writes <see cref="Map"/> assets to disk.</summary>
-    internal class MapWriter : BaseAssetWriter
+    public class MapWriter : BaseAssetWriter
     {
         /*********
         ** Fields

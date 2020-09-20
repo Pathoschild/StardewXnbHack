@@ -6,7 +6,7 @@ using StardewModdingAPI.Toolkit.Utilities;
 namespace StardewXnbHack.Framework.Writers
 {
     /// <summary>Writes <see cref="Texture2D"/> assets to disk.</summary>
-    internal class TextureWriter : BaseAssetWriter
+    public class TextureWriter : BaseAssetWriter
     {
         /*********
         ** Public methods

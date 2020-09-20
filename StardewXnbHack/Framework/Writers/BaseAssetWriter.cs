@@ -4,7 +4,7 @@ using StardewModdingAPI.Toolkit.Utilities;
 namespace StardewXnbHack.Framework.Writers
 {
     /// <summary>The base class for an asset writer.</summary>
-    internal abstract class BaseAssetWriter : IAssetWriter
+    public abstract class BaseAssetWriter : IAssetWriter
     {
         /*********
         ** Public methods

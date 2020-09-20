@@ -9,7 +9,7 @@ using StardewModdingAPI.Toolkit.Utilities;
 namespace StardewXnbHack.Framework.Writers
 {
     /// <summary>Writes <see cref="SpriteFont"/> assets to disk.</summary>
-    internal class SpriteFontWriter : BaseAssetWriter
+    public class SpriteFontWriter : BaseAssetWriter
     {
         /*********
         ** Public methods
