@@ -5,6 +5,7 @@ using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI.Toolkit.Utilities;
+using System.Collections;
 
 namespace StardewXnbHack.Framework.Writers
 {
@@ -58,40 +59,45 @@ namespace StardewXnbHack.Framework.Writers
         *********/
         /// <summary>Get the font glyph data for a MonoGame font.</summary>
         /// <param name="font">The sprite font.</param>
-#if IS_WINDOWS
         private IDictionary<char, object> GetGlyphs(SpriteFont font)
         {
-            // get internal sprite data
-            IList<Rectangle> glyphData = this.RequireField<List<Rectangle>>(font, "glyphData");
-            IList<Rectangle> croppingData = this.RequireField<List<Rectangle>>(font, "croppingData");
-            IList<Vector3> kerning = this.RequireField<List<Vector3>>(font, "kerning");
-
-            // replicate MonoGame structure for consistency (and readability)
+            Platform platform = EnvironmentUtility.DetectPlatform();
             IDictionary<char, object> glyphs = new Dictionary<char, object>();
-            for (int i = 0; i < font.Characters.Count; i++)
+
+            if (platform == Platform.Windows)
             {
-                char ch = font.Characters[i];
-                glyphs[ch] = new
+                // get internal sprite data
+                IList<Rectangle> glyphData = this.RequireField<List<Rectangle>>(font, "glyphData");
+                IList<Rectangle> croppingData = this.RequireField<List<Rectangle>>(font, "croppingData");
+                IList<Vector3> kerning = this.RequireField<List<Vector3>>(font, "kerning");
+
+                // replicate MonoGame structure for consistency (and readability)
+                for (int i = 0; i < font.Characters.Count; i++)
                 {
-                    BoundsInTexture = glyphData[i],
-                    Cropping = croppingData[i],
-                    Character = ch,
+                    char ch = font.Characters[i];
+                    glyphs[ch] = new
+                    {
+                        BoundsInTexture = glyphData[i],
+                        Cropping = croppingData[i],
+                        Character = ch,
 
-                    LeftSideBearing = kerning[i].X,
-                    Width = kerning[i].Y,
-                    RightSideBearing = kerning[i].Z,
+                        LeftSideBearing = kerning[i].X,
+                        Width = kerning[i].Y,
+                        RightSideBearing = kerning[i].Z,
 
-                    WidthIncludingBearings = kerning[i].X + kerning[i].Y + kerning[i].Z
-                };
+                        WidthIncludingBearings = kerning[i].X + kerning[i].Y + kerning[i].Z
+                    };
+                }
             }
+            else
+            {
+                //use Mono exclusive method
+                foreach (DictionaryEntry entry in this.RequireMethod<IDictionary>(font, "GetGlyphs"))
+                    glyphs.Add((char)entry.Key, entry.Value);
+            }
+
             return glyphs;
         }
-#else
-        private IDictionary<char, SpriteFont.Glyph> GetGlyphs(SpriteFont font)
-        {
-            return font.GetGlyphs();
-        }
-#endif
 
         /// <summary>Get a required font field using reflection.</summary>
         /// <typeparam name="T">The field type.</typeparam>
@@ -104,6 +110,19 @@ namespace StardewXnbHack.Framework.Writers
                 throw new InvalidOperationException($"Can't access {nameof(SpriteFont)}.{name} field");
 
             return (T)field.GetValue(font);
+        }
+
+        /// <summary>Get a required font method using reflection.</summary>
+        /// <typeparam name="T">The return type.</typeparam>
+        /// <param name="font">The font instance for which to get a methoh.</param>
+        /// <param name="name">The field name.</param>
+        private T RequireMethod<T>(SpriteFont font, string name)
+        {
+            MethodInfo method = typeof(SpriteFont).GetMethod("GetGlyphs", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            if (method == null)
+                throw new InvalidOperationException($"Can't access {nameof(SpriteFont)}.{name} method");
+
+            return (T)method.Invoke(font, null);
         }
     }
 }
