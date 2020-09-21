@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{5EDB5467-B
 		.gitignore = .gitignore
 		LICENSE = LICENSE
 		README.md = README.md
+		release-notes.md = release-notes.md
 	EndProjectSection
 EndProject
 Global

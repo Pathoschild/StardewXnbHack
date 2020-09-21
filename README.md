@@ -31,3 +31,6 @@ License | MIT | GPL | n/a
 Just run `StardewXnbHack.exe` (or click _Debug > Start without debugging_ in Visual Studio) to
 unpack with the default options. This will export the files to a `Content (unpacked)` folder in the
 game folder.
+
+## See also
+* [Release notes](release-notes.md)

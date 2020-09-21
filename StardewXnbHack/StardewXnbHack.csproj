@@ -1,16 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <!--metadata-->
+    <Authors>Pathoschild</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/Pathoschild/StardewXnbHack</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <Version>1.0.0</Version>
+
+    <!--build-->
     <TargetFramework>net452</TargetFramework>
     <Platforms>x86</Platforms>
     <OutputType>Exe</OutputType>
+    <DefineConstants Condition="$(OS) == 'Windows_NT'">$(DefineConstants);IS_WINDOWS</DefineConstants>
 
+    <!--mod build package-->
     <CopyModReferencesToBuildOutput>True</CopyModReferencesToBuildOutput>
     <EnableGameDebugging>False</EnableGameDebugging>
     <EnableModDeploy>False</EnableModDeploy>
     <EnableModZip>False</EnableModZip>
-
-    <DefineConstants Condition="$(OS) == 'Windows_NT'">$(DefineConstants);IS_WINDOWS</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
