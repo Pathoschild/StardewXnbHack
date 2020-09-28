@@ -1,6 +1,10 @@
 [← back to readme](README.md)
 
 # Release notes
+## Upcoming release
+* Added support for running unpacker from within the game folder (thanks to Platonymous!).
+* Changed BMFont extension from `.xml` to `.fnt` (thanks to Platonymous!).
+
 ## 1.0
 Includes changes between 16 June 2019 and 25 April 2020, which didn't have packaged releases.
 
