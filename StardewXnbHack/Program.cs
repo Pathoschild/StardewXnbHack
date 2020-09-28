@@ -13,7 +13,7 @@ using StardewXnbHack.ProgressHandling;
 namespace StardewXnbHack
 {
     /// <summary>The console app entry point.</summary>
-    public class Program
+    public static class Program
     {
         /*********
         ** Fields
@@ -136,8 +136,7 @@ namespace StardewXnbHack
                             logger.OnFileUnpackFailed(relativePath, UnpackFailedReason.UnsupportedFileType, $"{asset.GetType().Name} isn't a supported asset type.");
                             ExportRawXnb();
                         }
-                        else if (!writer.TryWriteFile(asset, fileExportPath, assetName, platform,
-                            out string writeError))
+                        else if (!writer.TryWriteFile(asset, fileExportPath, assetName, platform, out string writeError))
                         {
                             logger.OnFileUnpackFailed(relativePath, UnpackFailedReason.WriteError, $"{asset.GetType().Name} file could not be saved: {writeError}.");
                             ExportRawXnb();
