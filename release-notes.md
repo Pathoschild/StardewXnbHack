@@ -2,7 +2,9 @@
 
 # Release notes
 ## Upcoming release
-* Added support for running unpacker from within the game folder (thanks to Platonymous!).
+* Added support for running unpacker from...
+  * within the game folder (thanks to Platonymous!);
+  * another app or an in-game mod.
 * Changed BMFont extension from `.xml` to `.fnt` (thanks to Platonymous!).
 
 ## 1.0
