@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -44,7 +45,7 @@ namespace StardewXnbHack.Framework.Writers
                 font.Spacing,
                 font.DefaultCharacter,
                 font.Characters,
-                Glyphs = this.GetGlyphs(font)
+                Glyphs = this.GetGlyphs(font, platform)
             };
             File.WriteAllText($"{toPathWithoutExtension}.{this.GetDataExtension()}", this.FormatData(data));
 
@@ -58,40 +59,44 @@ namespace StardewXnbHack.Framework.Writers
         *********/
         /// <summary>Get the font glyph data for a MonoGame font.</summary>
         /// <param name="font">The sprite font.</param>
-#if IS_WINDOWS
-        private IDictionary<char, object> GetGlyphs(SpriteFont font)
+        /// <param name="platform">The operating system running the unpacker.</param>
+        private IDictionary<char, object> GetGlyphs(SpriteFont font, Platform platform)
         {
-            // get internal sprite data
-            IList<Rectangle> glyphData = this.RequireField<List<Rectangle>>(font, "glyphData");
-            IList<Rectangle> croppingData = this.RequireField<List<Rectangle>>(font, "croppingData");
-            IList<Vector3> kerning = this.RequireField<List<Vector3>>(font, "kerning");
-
-            // replicate MonoGame structure for consistency (and readability)
             IDictionary<char, object> glyphs = new Dictionary<char, object>();
-            for (int i = 0; i < font.Characters.Count; i++)
+
+            if (platform == Platform.Windows)
             {
-                char ch = font.Characters[i];
-                glyphs[ch] = new
+                // get internal sprite data
+                IList<Rectangle> glyphData = this.RequireField<List<Rectangle>>(font, "glyphData");
+                IList<Rectangle> croppingData = this.RequireField<List<Rectangle>>(font, "croppingData");
+                IList<Vector3> kerning = this.RequireField<List<Vector3>>(font, "kerning");
+
+                // replicate MonoGame structure for consistency (and readability)
+                for (int i = 0; i < font.Characters.Count; i++)
                 {
-                    BoundsInTexture = glyphData[i],
-                    Cropping = croppingData[i],
-                    Character = ch,
+                    char ch = font.Characters[i];
+                    glyphs[ch] = new
+                    {
+                        BoundsInTexture = glyphData[i],
+                        Cropping = croppingData[i],
+                        Character = ch,
 
-                    LeftSideBearing = kerning[i].X,
-                    Width = kerning[i].Y,
-                    RightSideBearing = kerning[i].Z,
+                        LeftSideBearing = kerning[i].X,
+                        Width = kerning[i].Y,
+                        RightSideBearing = kerning[i].Z,
 
-                    WidthIncludingBearings = kerning[i].X + kerning[i].Y + kerning[i].Z
-                };
+                        WidthIncludingBearings = kerning[i].X + kerning[i].Y + kerning[i].Z
+                    };
+                }
             }
+            else
+            {
+                foreach (DictionaryEntry entry in this.InvokeRequiredMethod<IDictionary>(font, "GetGlyphs")) // method is public in Mono, but need reflection so code compiles on Windows
+                    glyphs[(char)entry.Key] = entry.Value;
+            }
+
             return glyphs;
         }
-#else
-        private IDictionary<char, SpriteFont.Glyph> GetGlyphs(SpriteFont font)
-        {
-            return font.GetGlyphs();
-        }
-#endif
 
         /// <summary>Get a required font field using reflection.</summary>
         /// <typeparam name="T">The field type.</typeparam>
@@ -104,6 +109,19 @@ namespace StardewXnbHack.Framework.Writers
                 throw new InvalidOperationException($"Can't access {nameof(SpriteFont)}.{name} field");
 
             return (T)field.GetValue(font);
+        }
+
+        /// <summary>Invoke a required font method using reflection.</summary>
+        /// <typeparam name="TReturn">The return type.</typeparam>
+        /// <param name="font">The font instance for which to get a method.</param>
+        /// <param name="name">The method name.</param>
+        private TReturn InvokeRequiredMethod<TReturn>(SpriteFont font, string name)
+        {
+            MethodInfo method = typeof(SpriteFont).GetMethod(name, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            if (method == null)
+                throw new InvalidOperationException($"Can't access {nameof(SpriteFont)}.{name} method");
+
+            return (TReturn)method.Invoke(font, null);
         }
     }
 }

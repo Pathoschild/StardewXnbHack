@@ -12,7 +12,6 @@
     <TargetFramework>net452</TargetFramework>
     <Platforms>x86</Platforms>
     <OutputType>Exe</OutputType>
-    <DefineConstants Condition="$(OS) == 'Windows_NT'">$(DefineConstants);IS_WINDOWS</DefineConstants>
 
     <!--mod build package-->
     <CopyModReferencesToBuildOutput>True</CopyModReferencesToBuildOutput>
