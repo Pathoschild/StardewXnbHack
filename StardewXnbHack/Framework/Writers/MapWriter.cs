@@ -59,8 +59,7 @@ namespace StardewXnbHack.Framework.Writers
             }
 
             // save file
-            using (Stream stream = File.Create($"{toPathWithoutExtension}.tmx"))
-                this.Format.Store(map, stream, DataEncodingType.CSV);
+            File.WriteAllText($"{toPathWithoutExtension}.tmx", this.Format.StoreAsString(map, DataEncodingType.CSV));
 
             // undo tile size changes
             foreach (var layer in map.Layers)
