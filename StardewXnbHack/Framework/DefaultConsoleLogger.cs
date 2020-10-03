@@ -13,6 +13,9 @@ namespace StardewXnbHack.Framework
         /// <summary>The context info for the current unpack run.</summary>
         private readonly IUnpackContext Context;
 
+        /// <summary>Whether to show a 'press any key to exit' prompt on end.</summary>
+        private readonly bool PressAnyKeyToExit;
+
         /// <summary>The current progress bar written to the console.</summary>
         private ConsoleProgressBar ProgressBar;
 
@@ -22,9 +25,11 @@ namespace StardewXnbHack.Framework
         *********/
         /// <summary>Construct an instance.</summary>
         /// <param name="context">The context info for the current unpack run.</param>
-        public DefaultConsoleLogger(IUnpackContext context)
+        /// <param name="pressAnyKeyToExit">Whether to show a 'press any key to exit' prompt on end.</param>
+        public DefaultConsoleLogger(IUnpackContext context, bool pressAnyKeyToExit)
         {
             this.Context = context;
+            this.PressAnyKeyToExit = pressAnyKeyToExit;
         }
 
         /// <inheritdoc />
@@ -37,6 +42,10 @@ namespace StardewXnbHack.Framework
         public void OnStepChanged(ProgressStep step, string message)
         {
             this.ProgressBar?.Erase();
+
+            if (step == ProgressStep.Done)
+                Console.WriteLine();
+
             Console.WriteLine(message);
         }
 
@@ -59,6 +68,17 @@ namespace StardewXnbHack.Framework
 
             this.ProgressBar.Erase();
             this.PrintColor($"{relativePath} => {errorMessage}", color);
+        }
+
+        /// <inheritdoc />
+        public void OnEnded()
+        {
+            if (this.PressAnyKeyToExit)
+            {
+                Console.WriteLine();
+                Console.WriteLine("Press any key to exit.");
+                Console.ReadKey();
+            }
         }
 
 

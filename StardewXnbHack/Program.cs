@@ -41,11 +41,12 @@ namespace StardewXnbHack
         /// <param name="game">The game instance through which to unpack files, or <c>null</c> to launch a temporary internal instance.</param>
         /// <param name="gamePath">The absolute path to the game folder, or <c>null</c> to auto-detect it.</param>
         /// <param name="getLogger">Get a custom progress update logger, or <c>null</c> to use the default console logging. Receives the unpack context and default logger as arguments.</param>
-        public static void Run(Game1 game = null, string gamePath = null, Func<IUnpackContext, IProgressLogger, IProgressLogger> getLogger = null)
+        /// <param name="pressAnyKeyToExit">Whether the default logger shows a 'press any key to exit' prompt.</param>
+        public static void Run(Game1 game = null, string gamePath = null, Func<IUnpackContext, IProgressLogger, IProgressLogger> getLogger = null, bool pressAnyKeyToExit = true)
         {
             // init logging
             UnpackContext context = new UnpackContext();
-            IProgressLogger logger = new DefaultConsoleLogger(context);
+            IProgressLogger logger = new DefaultConsoleLogger(context, pressAnyKeyToExit);
             if (getLogger != null)
                 logger = getLogger(context, logger);
 
@@ -159,6 +160,7 @@ namespace StardewXnbHack
             }
 
             logger.OnStepChanged(ProgressStep.Done, $"Done! Unpacked files to {context.ExportPath}.");
+            logger.OnEnded();
         }
 
 

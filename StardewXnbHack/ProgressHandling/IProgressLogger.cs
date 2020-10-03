@@ -24,5 +24,8 @@ namespace StardewXnbHack.ProgressHandling
         /// <param name="errorCode">An error code indicating why unpacking failed.</param>
         /// <param name="errorMessage">An error message indicating why unpacking failed.</param>
         void OnFileUnpackFailed(string relativePath, UnpackFailedReason errorCode, string errorMessage);
+
+        /// <summary>The unpacker is done and exiting.</summary>
+        void OnEnded();
     }
 }
