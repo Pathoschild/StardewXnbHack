@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -44,6 +45,10 @@ namespace StardewXnbHack
         /// <param name="pressAnyKeyToExit">Whether the default logger shows a 'press any key to exit' prompt.</param>
         public static void Run(Game1 game = null, string gamePath = null, Func<IUnpackContext, IProgressLogger, IProgressLogger> getLogger = null, bool pressAnyKeyToExit = true)
         {
+            // start timer
+            Stopwatch timer = new Stopwatch();
+            timer.Start();
+
             // init logging
             UnpackContext context = new UnpackContext();
             IProgressLogger logger = new DefaultConsoleLogger(context, pressAnyKeyToExit);
@@ -159,7 +164,7 @@ namespace StardewXnbHack
                     game.Dispose();
             }
 
-            logger.OnStepChanged(ProgressStep.Done, $"Done! Unpacked files to {context.ExportPath}.");
+            logger.OnStepChanged(ProgressStep.Done, $"Done! Unpacked {context.Files.Count()} files in {Program.GetHumanTime(timer.Elapsed)}.\nUnpacked into {context.ExportPath}.");
             logger.OnEnded();
         }
 
@@ -198,6 +203,20 @@ namespace StardewXnbHack
                 Console.ForegroundColor = foregroundColor;
                 Console.WriteLine();
             }
+        }
+
+        /// <summary>Get a human-readable representation of elapsed time.</summary>
+        /// <param name="time">The elapsed time.</param>
+        private static string GetHumanTime(TimeSpan time)
+        {
+            List<string> parts = new List<string>(2);
+
+            if (time.TotalMinutes >= 1)
+                parts.Add($"{time.TotalMinutes:0} minute{(time.TotalMinutes >= 2 ? "s" : "")}");
+            if (time.Seconds > 0)
+                parts.Add($"{time.Seconds:0} second{(time.Seconds > 1 ? "s" : "")}");
+
+            return string.Join(" ", parts);
         }
     }
 }
