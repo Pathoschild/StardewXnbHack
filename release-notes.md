@@ -2,8 +2,9 @@
 
 # Release notes
 ## Upcoming release
-* Added compiled release. (Thanks to Platonymous for some PRs to enable this!)
-* Added support for running unpacker from the game folder (thanks to Platonymous!) or another app.
+* Added compiled release. (Thanks to Platonymous!)
+* Added support for running it from the game folder (thanks to Platonymous!) or another app.
+* Changed map format from `.tbin` to `.tmx` (thanks to Platonymous!).
 * Changed BMFont extension from `.xml` to `.fnt` (thanks to Platonymous!).
 * Fixed cases where an XNB file which couldn't be unpacked isn't copied into the export folder as-is.
 

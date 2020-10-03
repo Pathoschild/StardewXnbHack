@@ -5,7 +5,6 @@ using StardewValley;
 using TMXTile;
 using xTile;
 using xTile.Dimensions;
-using xTile.Format;
 using xTile.Layers;
 
 namespace StardewXnbHack.Framework.Writers
@@ -26,6 +25,7 @@ namespace StardewXnbHack.Framework.Writers
         /*********
         ** Public methods
         *********/
+        /// <summary>Construct an instance.</summary>
         public MapWriter()
         {
             // init TMX support
@@ -59,7 +59,8 @@ namespace StardewXnbHack.Framework.Writers
             }
 
             // save file
-            File.WriteAllText($"{toPathWithoutExtension}.tmx", this.Format.StoreAsString(map, DataEncodingType.CSV));
+            using (Stream stream = File.Create($"{toPathWithoutExtension}.tmx"))
+                this.Format.Store(map, stream, DataEncodingType.CSV);
 
             // undo tile size changes
             foreach (var layer in map.Layers)

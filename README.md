@@ -30,14 +30,15 @@ The main differences at a glance:
 &nbsp;                | Stardew XNB Hack | [xnbcli](https://github.com/LeonBlade/xnbcli/) | [XNBExtract](https://community.playstarbound.com/threads/110976)
 --------------------- | ---------------- | ------ | -----------
 Supported asset types | ✓ images<br />✓ maps<br />✓ dictionary data<br />✓ font texture<br />✓ font XML data<br />✓ structured data | ✓ images<br />✓ maps<br />✓ dictionary data<br />✓ font textures<br />✓ font XML data<br />❑ structured data | ✓ images<br />✓ maps<br />✓ dictionary data<br />✓ font textures<br />❑ font XML data<br />❑ structured data
-Export formats | ✓ `.png` for images<br />✓ `.tbin` for maps<br />✓ `.json` for data ([CP](https://www.nexusmods.com/stardewvalley/mods/1915)-compatible) | ✓ `.png` for images<br />✓ `.tbin` for maps<br />❑ `.json` for data (wrapped format) | ✓ `.png` for images<br />✓ `.tbin` for maps<br />❑ `.yaml` for data
-Supported platforms | ✓ Windows<br />✓ Linux¹<br />✓ Mac¹ | ✓ Windows<br />✓ Linux<br />✓ Mac | ✓ Windows<br />❑ Linux<br />❑ Mac
+Export formats | ✓ `.png` for images<br />✓ `.tmx` for maps<br />✓ `.json` for data ([CP](https://www.nexusmods.com/stardewvalley/mods/1915)-compatible) | ✓ `.png` for images<br />✓ `.tbin` for maps¹<br />❑ `.json` for data (custom format) | ✓ `.png` for images<br />✓ `.tbin` for maps¹<br />❑ `.yaml` for data
+Supported platforms | ✓ Windows<br />✓ Linux²<br />✓ Mac² | ✓ Windows<br />✓ Linux<br />✓ Mac | ✓ Windows<br />❑ Linux<br />❑ Mac
 Supported operations | ✓ unpack<br />❑ pack | ✓ unpack<br />✓ pack  (uncompressed) | ✓ unpack<br />✓ pack
 Maintainable | ✓ simple hack, easy to update | ❑ complex | ❑ complex, closed-source
 Sample unpack time<br />(full `Content` folder) | ≈0m 40s | ≈6m 5s | ≈2m 20s
 License | MIT | GPL | n/a
 
-<sup>¹ Some sprite font textures can't be unpacked on Linux/Mac, but all other assets unpack fine.</sup>
+<sup>¹ `.tmx` is the preferred map format for mods since it enables more features, but you can open the `.tbin` file in Tiled and export it as `.tmx`.</sup>  
+<sup>² Some sprite font textures can't be unpacked on Linux/Mac, but all other assets unpack fine.</sup>
 
 ### Can I compile the code myself?
 In most cases you should [use the release version](#usage) instead. If you really want to compile
@@ -51,7 +52,6 @@ it yourself:
 That's it! Just click _Debug > Start without debugging_ in Visual Studio (or run `StardewXnbHack.exe`
 in the `bin` folder) to unpack with the default options. This will export the files to a
 `Content (unpacked)` folder in the game folder.
-
 
 ## See also
 * [Release notes](release-notes.md)
