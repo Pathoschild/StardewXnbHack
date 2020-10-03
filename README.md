@@ -1,7 +1,7 @@
-**StardewXnbHack** is a one-way XNB unpacker for Stardew Valley.
+**StardewXnbHack** is a one-way XNB unpacker for Stardew Valley. It supports every Stardew Valley
+asset type, is very easy to update for game changes, and is quick at unpacking many files at once.
 
-It supports every Stardew Valley asset type, is very easy to update for game changes, and is quick
-at unpacking many files at once.
+![](StardewXnbHack/icon.png)
 
 ## Usage
 **Note: these instructions are for the upcoming 1.0 release. See the FAQs to compile it yourself

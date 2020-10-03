@@ -3,6 +3,7 @@
 # Release notes
 ## Upcoming release
 * Added compiled release. (Thanks to Platonymous!)
+* Added app icon/mascot (thanks to ParadigmNomad!).
 * Added support for running it from the game folder (thanks to Platonymous!) or another app.
 * Added file count and unpack time to log.
 * Changed map format from `.tbin` to `.tmx` (thanks to Platonymous!).

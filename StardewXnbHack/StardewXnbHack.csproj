@@ -12,6 +12,7 @@
     <TargetFramework>net452</TargetFramework>
     <Platforms>x86</Platforms>
     <OutputType>Exe</OutputType>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
 
     <!--mod build package-->
     <CopyModReferencesToBuildOutput>True</CopyModReferencesToBuildOutput>
