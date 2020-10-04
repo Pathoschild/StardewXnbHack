@@ -61,7 +61,7 @@ namespace StardewXnbHack
 
                 // get game info
                 Platform platform = EnvironmentUtility.DetectPlatform();
-                context.GamePath = gamePath ?? new ModToolkit().GetGameFolders().FirstOrDefault()?.FullName;
+                context.GamePath = gamePath ?? Program.DetectGameFolder(platform);
                 if (context.GamePath == null || !Directory.Exists(context.GamePath))
                 {
                     logger.OnFatalError("Can't find Stardew Valley folder.");
@@ -215,6 +215,20 @@ namespace StardewXnbHack
                 Console.ForegroundColor = foregroundColor;
                 Console.WriteLine();
             }
+        }
+
+        /// <summary>Detect the game folder, if any.</summary>
+        /// <param name="platform">The OS running the unpacker.</param>
+        private static string DetectGameFolder(Platform platform)
+        {
+            // running from game folder?
+            string gamePath = AppDomain.CurrentDomain.BaseDirectory;
+            string gameExePath = Path.Combine(gamePath, platform == Platform.Windows ? "Stardew Valley.exe" : "StardewValley.exe");
+            if (File.Exists(gameExePath))
+                return gamePath;
+
+            // else auto-detect
+            return new ModToolkit().GetGameFolders().FirstOrDefault()?.FullName;
         }
 
         /// <summary>Get a human-readable representation of elapsed time.</summary>
