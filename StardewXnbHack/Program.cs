@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI.Toolkit.Utilities;
 using StardewValley;
 using StardewXnbHack.Framework;
@@ -154,7 +155,10 @@ namespace StardewXnbHack
                         }
                         catch (Exception ex)
                         {
-                            logger.OnFileUnpackFailed(relativePath, UnpackFailedReason.ReadError, $"read error: {ex.Message}");
+                            if (platform.Platform.IsMono() && ex.Message == "This does not appear to be a MonoGame MGFX file!")
+                                logger.OnFileUnpackFailed(relativePath, UnpackFailedReason.UnsupportedFileType, $"{nameof(Effect)} isn't a supported asset type."); // use same friendly error as Windows
+                            else
+                                logger.OnFileUnpackFailed(relativePath, UnpackFailedReason.ReadError, $"read error: {ex.Message}");
                             ExportRawXnb();
                             continue;
                         }
