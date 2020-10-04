@@ -12,7 +12,7 @@
     <TargetFramework>net452</TargetFramework>
     <Platforms>x86</Platforms>
     <OutputType>Exe</OutputType>
-    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <ApplicationIcon>assets/icon.ico</ApplicationIcon>
 
     <!--mod build package-->
     <CopyModReferencesToBuildOutput>True</CopyModReferencesToBuildOutput>
@@ -28,12 +28,21 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="BmFont">
-      <HintPath>$(GamePath)\BmFont.dll</HintPath>
-    </Reference>
-    <Reference Include="SMAPI.Toolkit">
-      <HintPath>$(GamePath)\smapi-internal\SMAPI.Toolkit.dll</HintPath>
-    </Reference>
+    <Reference Include="BmFont" HintPath="$(GamePath)\BmFont.dll" />
+    <Reference Include="SMAPI.Toolkit" HintPath="$(GamePath)\smapi-internal\SMAPI.Toolkit.dll" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Update="assets\unix-launcher.sh" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <Target Name="PrepareUnixBuild" AfterTargets="AfterBuild" Condition="'$(OS)' != 'Windows_NT'">
+    <Move SourceFiles="$(TargetDir)\assets\unix-launcher.sh" DestinationFiles="$(TargetDir)\StardewXnbHack.command" />
+    <Copy SourceFiles="$(TargetDir)\StardewXnbHack.command" DestinationFiles="$(TargetDir)\StardewXnbHack.sh" />
+
+    <Exec Command="chmod 755 &quot;$(TargetDir)\StardewXnbHack.command&quot;" />
+    <Exec Command="chmod 755 &quot;$(TargetDir)\StardewXnbHack.sh&quot;" />
+    <Exec Command="chmod 755 &quot;$(TargetDir)\StardewXnbHack.exe&quot;" />
+  </Target>
 
 </Project>

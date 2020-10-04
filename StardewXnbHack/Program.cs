@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using StardewModdingAPI.Toolkit;
 using StardewModdingAPI.Toolkit.Utilities;
 using StardewValley;
 using StardewXnbHack.Framework;
@@ -60,8 +59,8 @@ namespace StardewXnbHack
                 timer.Start();
 
                 // get game info
-                Platform platform = EnvironmentUtility.DetectPlatform();
-                context.GamePath = gamePath ?? Program.DetectGameFolder(platform);
+                var platform = new PlatformContext();
+                context.GamePath = gamePath ?? platform.DetectGameFolder();
                 if (context.GamePath == null || !Directory.Exists(context.GamePath))
                 {
                     logger.OnFatalError("Can't find Stardew Valley folder.");
@@ -69,17 +68,17 @@ namespace StardewXnbHack
                 }
 
                 // get import/export paths
-                context.ContentPath = Path.Combine(context.GamePath, "Content");
-                context.ExportPath = Path.Combine(context.GamePath, "Content (unpacked)");
+                context.ContentPath = Path.Combine(context.GamePath, platform.GetRelativeContentPath());
+                context.ExportPath = context.ContentPath + " (unpacked)";
                 logger.OnStepChanged(ProgressStep.GameFound, $"Found game folder: {context.GamePath}.");
 
                 // symlink files on Linux/Mac
-                if (platform == Platform.Linux || platform == Platform.Mac)
+                if (platform.Is(Platform.Linux, Platform.Mac))
                 {
-                    foreach (string dirName in new[] { "Content", "lib", "lib64" })
+                    foreach (string dirName in new[] { "lib", "lib64" })
                     {
                         string fullPath = Path.Combine(context.GamePath, dirName);
-                        if (!Directory.Exists(fullPath))
+                        if (!Directory.Exists(dirName))
                             Process.Start("ln", $"-sf \"{fullPath}\"");
                     }
                 }
@@ -146,7 +145,7 @@ namespace StardewXnbHack
                                 logger.OnFileUnpackFailed(relativePath, UnpackFailedReason.UnsupportedFileType, $"{asset.GetType().Name} isn't a supported asset type.");
                                 ExportRawXnb();
                             }
-                            else if (!writer.TryWriteFile(asset, fileExportPath, assetName, platform, out string writeError))
+                            else if (!writer.TryWriteFile(asset, fileExportPath, assetName, platform.Platform, out string writeError))
                             {
                                 logger.OnFileUnpackFailed(relativePath, UnpackFailedReason.WriteError, $"{asset.GetType().Name} file could not be saved: {writeError}.");
                                 ExportRawXnb();
@@ -185,9 +184,9 @@ namespace StardewXnbHack
         ** Private methods
         *********/
         /// <summary>Create a temporary game instance for the unpacker.</summary>
-        /// <param name="platform">The OS running the unpacker.</param>
-        /// <param name="contentPath">The path to the content folder to import.</param>
-        private static Game1 CreateTemporaryGameInstance(Platform platform, string contentPath)
+        /// <param name="platform">The platform-specific context.</param>
+        /// <param name="contentPath">The absolute path to the content folder to import.</param>
+        private static Game1 CreateTemporaryGameInstance(PlatformContext platform, string contentPath)
         {
             var foregroundColor = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.DarkGray;
@@ -197,7 +196,7 @@ namespace StardewXnbHack
 
                 Game1 game = new Game1();
 
-                if (platform == Platform.Windows)
+                if (platform.Is(Platform.Windows))
                 {
                     game.Content.RootDirectory = contentPath;
                     MethodInfo startGameLoop = typeof(Game1).GetMethod("StartGameLoop", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
@@ -215,20 +214,6 @@ namespace StardewXnbHack
                 Console.ForegroundColor = foregroundColor;
                 Console.WriteLine();
             }
-        }
-
-        /// <summary>Detect the game folder, if any.</summary>
-        /// <param name="platform">The OS running the unpacker.</param>
-        private static string DetectGameFolder(Platform platform)
-        {
-            // running from game folder?
-            string gamePath = AppDomain.CurrentDomain.BaseDirectory;
-            string gameExePath = Path.Combine(gamePath, platform == Platform.Windows ? "Stardew Valley.exe" : "StardewValley.exe");
-            if (File.Exists(gameExePath))
-                return gamePath;
-
-            // else auto-detect
-            return new ModToolkit().GetGameFolders().FirstOrDefault()?.FullName;
         }
 
         /// <summary>Get a human-readable representation of elapsed time.</summary>
