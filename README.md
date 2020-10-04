@@ -68,8 +68,8 @@ on the wiki for the first-time setup.
 
 2. In Windows:
    1. Rebuild the solution with the _release_ solution configuration.
-   2. Zip `StardewXnbHack.exe` and `StardewXnbHack.exe.config` into a file with the version number
-      and OS, like `StardewXnbHack 1.0.0 (Windows).zip`.
+   2. Zip `StardewXnbHack.exe` into a file with the version number and OS, like
+      `StardewXnbHack 1.0.0 (Windows).zip`.
 
 3. In Linux/Mac:
    1. Rebuild the solution with the _release_ solution configuration.
@@ -77,13 +77,11 @@ on the wiki for the first-time setup.
       ```
       StardewXnbHack 1.0.0 (Linux).zip/
          StardewXnbHack.exe
-         StardewXnbHack.exe.config
          StardewXnbHack.sh
 
       StardewXnbHack 1.0.0 (MacOS).zip/
          StardewXnbHack.command
          StardewXnbHack.exe
-         StardewXnbHack.exe.config
       ```
 
 4. Post a release with all three zip files.

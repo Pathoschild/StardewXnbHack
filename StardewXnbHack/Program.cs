@@ -16,24 +16,18 @@ namespace StardewXnbHack
     public static class Program
     {
         /*********
-        ** Fields
-        *********/
-        /// <summary>The asset writers which support saving data to disk.</summary>
-        private static readonly IAssetWriter[] AssetWriters = {
-            new MapWriter(),
-            new SpriteFontWriter(),
-            new TextureWriter(),
-            new XmlSourceWriter(),
-            new DataWriter() // check last due to more expensive CanWrite
-        };
-
-
-        /*********
         ** Public methods
         *********/
         /// <summary>The console app entry method.</summary>
         internal static void Main()
         {
+            // Add fallback assembly resolution that loads DLLs from a 'smapi-internal' subfolder,
+            // so it can be run from the game folder. This must be set before any references to
+            // game or toolkit types (including IAssetWriter which references the toolkit's
+            // Platform enum).
+            AppDomain.CurrentDomain.AssemblyResolve += Program.CurrentDomain_AssemblyResolve;
+
+            // launch app
             Program.Run();
         }
 
@@ -57,6 +51,16 @@ namespace StardewXnbHack
                 // start timer
                 Stopwatch timer = new Stopwatch();
                 timer.Start();
+
+                // get asset writers
+                var assetWriters = new IAssetWriter[]
+                {
+                    new MapWriter(),
+                    new SpriteFontWriter(),
+                    new TextureWriter(),
+                    new XmlSourceWriter(),
+                    new DataWriter() // check last due to more expensive CanWrite
+                };
 
                 // get game info
                 var platform = new PlatformContext();
@@ -137,7 +141,7 @@ namespace StardewXnbHack
                         try
                         {
                             // get writer
-                            IAssetWriter writer = Program.AssetWriters.FirstOrDefault(p => p.CanWrite(asset));
+                            IAssetWriter writer = assetWriters.FirstOrDefault(p => p.CanWrite(asset));
 
                             // write file
                             if (writer == null)
@@ -183,6 +187,35 @@ namespace StardewXnbHack
         /*********
         ** Private methods
         *********/
+        /// <summary>Method called when assembly resolution fails, which may return a manually resolved assembly.</summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
+        private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs e)
+        {
+            // get path to 'smapi-internal'
+            string searchPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "smapi-internal");
+            if (!Directory.Exists(searchPath))
+                return null;
+
+            // try to resolve DLL
+            try
+            {
+                AssemblyName name = new AssemblyName(e.Name);
+                foreach (FileInfo dll in new DirectoryInfo(searchPath).EnumerateFiles("*.dll"))
+                {
+                    if (name.Name.Equals(AssemblyName.GetAssemblyName(dll.FullName).Name, StringComparison.OrdinalIgnoreCase))
+                        return Assembly.LoadFrom(dll.FullName);
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error resolving assembly: {ex}");
+                return null;
+            }
+        }
+
         /// <summary>Create a temporary game instance for the unpacker.</summary>
         /// <param name="platform">The platform-specific context.</param>
         /// <param name="contentPath">The absolute path to the content folder to import.</param>
