@@ -6,9 +6,9 @@ namespace StardewXnbHack.ProgressHandling
         /*********
         ** Methods
         *********/
-        /// <summary>Log an error which prevented the unpack from starting (e.g. game folder missing).</summary>
-        /// <param name="error">The error message indicating why the unpack can't start.</param>
-        void OnStartError(string error);
+        /// <summary>Log an error which halts the unpack process (e.g. game folder missing).</summary>
+        /// <param name="error">The error message indicating why the unpacker halted.</param>
+        void OnFatalError(string error);
 
         /// <summary>Log a step transition in the overall unpack process.</summary>
         /// <param name="step">The new step.</param>

@@ -33,7 +33,7 @@ namespace StardewXnbHack.Framework
         }
 
         /// <inheritdoc />
-        public void OnStartError(string error)
+        public void OnFatalError(string error)
         {
             this.PrintColor(error, ConsoleColor.Red);
         }

@@ -45,127 +45,139 @@ namespace StardewXnbHack
         /// <param name="pressAnyKeyToExit">Whether the default logger shows a 'press any key to exit' prompt.</param>
         public static void Run(Game1 game = null, string gamePath = null, Func<IUnpackContext, IProgressLogger, IProgressLogger> getLogger = null, bool pressAnyKeyToExit = true)
         {
-            // start timer
-            Stopwatch timer = new Stopwatch();
-            timer.Start();
-
             // init logging
             UnpackContext context = new UnpackContext();
             IProgressLogger logger = new DefaultConsoleLogger(context, pressAnyKeyToExit);
-            if (getLogger != null)
-                logger = getLogger(context, logger);
 
-            // get game info
-            Platform platform = EnvironmentUtility.DetectPlatform();
-            context.GamePath = gamePath ?? new ModToolkit().GetGameFolders().FirstOrDefault()?.FullName;
-            if (context.GamePath == null || !Directory.Exists(context.GamePath))
-            {
-                logger.OnStartError("Can't find Stardew Valley folder.");
-                return;
-            }
-
-            // get import/export paths
-            context.ContentPath = Path.Combine(context.GamePath, "Content");
-            context.ExportPath = Path.Combine(context.GamePath, "Content (unpacked)");
-            logger.OnStepChanged(ProgressStep.GameFound, $"Found game folder: {context.GamePath}.");
-
-            // symlink files on Linux/Mac
-            if (platform == Platform.Linux || platform == Platform.Mac)
-            {
-                foreach (string dirName in new[] { "Content", "lib", "lib64" })
-                {
-                    string fullPath = Path.Combine(context.GamePath, dirName);
-                    if (!Directory.Exists(fullPath))
-                        Process.Start("ln", $"-sf \"{fullPath}\"");
-                }
-            }
-
-            // load game instance
-            bool disposeGame = false;
-            if (game == null)
-            {
-                logger.OnStepChanged(ProgressStep.LoadingGameInstance, "Loading game instance...");
-                game = Program.CreateTemporaryGameInstance(platform, context.ContentPath);
-                disposeGame = true;
-            }
-
-            // unpack files
             try
             {
-                logger.OnStepChanged(ProgressStep.UnpackingFiles, "Unpacking files...");
+                // get override logger
+                if (getLogger != null)
+                    logger = getLogger(context, logger);
 
-                // collect files
-                DirectoryInfo contentDir = new DirectoryInfo(context.ContentPath);
-                FileInfo[] files = contentDir.EnumerateFiles("*.xnb", SearchOption.AllDirectories).ToArray();
-                context.Files = files;
+                // start timer
+                Stopwatch timer = new Stopwatch();
+                timer.Start();
 
-                // write assets
-                foreach (FileInfo file in files)
+                // get game info
+                Platform platform = EnvironmentUtility.DetectPlatform();
+                context.GamePath = gamePath ?? new ModToolkit().GetGameFolders().FirstOrDefault()?.FullName;
+                if (context.GamePath == null || !Directory.Exists(context.GamePath))
                 {
-                    // prepare paths
-                    string assetName = file.FullName.Substring(context.ContentPath.Length + 1, file.FullName.Length - context.ContentPath.Length - 5); // remove root path + .xnb extension
-                    string relativePath = $"{assetName}.xnb";
-                    string fileExportPath = Path.Combine(context.ExportPath, assetName);
-                    Directory.CreateDirectory(Path.GetDirectoryName(fileExportPath));
+                    logger.OnFatalError("Can't find Stardew Valley folder.");
+                    return;
+                }
 
-                    // fallback logic
-                    void ExportRawXnb()
-                    {
-                        File.Copy(file.FullName, $"{fileExportPath}.xnb", overwrite: true);
-                    }
+                // get import/export paths
+                context.ContentPath = Path.Combine(context.GamePath, "Content");
+                context.ExportPath = Path.Combine(context.GamePath, "Content (unpacked)");
+                logger.OnStepChanged(ProgressStep.GameFound, $"Found game folder: {context.GamePath}.");
 
-                    // show progress bar
-                    logger.OnFileUnpacking(assetName);
-
-                    // read asset
-                    object asset = null;
-                    try
+                // symlink files on Linux/Mac
+                if (platform == Platform.Linux || platform == Platform.Mac)
+                {
+                    foreach (string dirName in new[] { "Content", "lib", "lib64" })
                     {
-                        asset = game.Content.Load<object>(assetName);
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.OnFileUnpackFailed(relativePath, UnpackFailedReason.ReadError, $"read error: {ex.Message}");
-                        ExportRawXnb();
-                        continue;
-                    }
-
-                    // write asset
-                    try
-                    {
-                        // get writer
-                        IAssetWriter writer = Program.AssetWriters.FirstOrDefault(p => p.CanWrite(asset));
-
-                        // write file
-                        if (writer == null)
-                        {
-                            logger.OnFileUnpackFailed(relativePath, UnpackFailedReason.UnsupportedFileType, $"{asset.GetType().Name} isn't a supported asset type.");
-                            ExportRawXnb();
-                        }
-                        else if (!writer.TryWriteFile(asset, fileExportPath, assetName, platform, out string writeError))
-                        {
-                            logger.OnFileUnpackFailed(relativePath, UnpackFailedReason.WriteError, $"{asset.GetType().Name} file could not be saved: {writeError}.");
-                            ExportRawXnb();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.OnFileUnpackFailed(relativePath, UnpackFailedReason.UnknownError, $"unhandled export error: {ex.Message}");
-                    }
-                    finally
-                    {
-                        game.Content.Unload();
+                        string fullPath = Path.Combine(context.GamePath, dirName);
+                        if (!Directory.Exists(fullPath))
+                            Process.Start("ln", $"-sf \"{fullPath}\"");
                     }
                 }
+
+                // load game instance
+                bool disposeGame = false;
+                if (game == null)
+                {
+                    logger.OnStepChanged(ProgressStep.LoadingGameInstance, "Loading game instance...");
+                    game = Program.CreateTemporaryGameInstance(platform, context.ContentPath);
+                    disposeGame = true;
+                }
+
+                // unpack files
+                try
+                {
+                    logger.OnStepChanged(ProgressStep.UnpackingFiles, "Unpacking files...");
+
+                    // collect files
+                    DirectoryInfo contentDir = new DirectoryInfo(context.ContentPath);
+                    FileInfo[] files = contentDir.EnumerateFiles("*.xnb", SearchOption.AllDirectories).ToArray();
+                    context.Files = files;
+
+                    // write assets
+                    foreach (FileInfo file in files)
+                    {
+                        // prepare paths
+                        string assetName = file.FullName.Substring(context.ContentPath.Length + 1, file.FullName.Length - context.ContentPath.Length - 5); // remove root path + .xnb extension
+                        string relativePath = $"{assetName}.xnb";
+                        string fileExportPath = Path.Combine(context.ExportPath, assetName);
+                        Directory.CreateDirectory(Path.GetDirectoryName(fileExportPath));
+
+                        // fallback logic
+                        void ExportRawXnb()
+                        {
+                            File.Copy(file.FullName, $"{fileExportPath}.xnb", overwrite: true);
+                        }
+
+                        // show progress bar
+                        logger.OnFileUnpacking(assetName);
+
+                        // read asset
+                        object asset = null;
+                        try
+                        {
+                            asset = game.Content.Load<object>(assetName);
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.OnFileUnpackFailed(relativePath, UnpackFailedReason.ReadError, $"read error: {ex.Message}");
+                            ExportRawXnb();
+                            continue;
+                        }
+
+                        // write asset
+                        try
+                        {
+                            // get writer
+                            IAssetWriter writer = Program.AssetWriters.FirstOrDefault(p => p.CanWrite(asset));
+
+                            // write file
+                            if (writer == null)
+                            {
+                                logger.OnFileUnpackFailed(relativePath, UnpackFailedReason.UnsupportedFileType, $"{asset.GetType().Name} isn't a supported asset type.");
+                                ExportRawXnb();
+                            }
+                            else if (!writer.TryWriteFile(asset, fileExportPath, assetName, platform, out string writeError))
+                            {
+                                logger.OnFileUnpackFailed(relativePath, UnpackFailedReason.WriteError, $"{asset.GetType().Name} file could not be saved: {writeError}.");
+                                ExportRawXnb();
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.OnFileUnpackFailed(relativePath, UnpackFailedReason.UnknownError, $"unhandled export error: {ex.Message}");
+                        }
+                        finally
+                        {
+                            game.Content.Unload();
+                        }
+                    }
+                }
+                finally
+                {
+                    if (disposeGame)
+                        game.Dispose();
+                }
+
+                logger.OnStepChanged(ProgressStep.Done, $"Done! Unpacked {context.Files.Count()} files in {Program.GetHumanTime(timer.Elapsed)}.\nUnpacked into {context.ExportPath}.");
+            }
+            catch (Exception ex)
+            {
+                logger.OnFatalError($"Unhandled exception: {ex}");
             }
             finally
             {
-                if (disposeGame)
-                    game.Dispose();
+                logger.OnEnded();
             }
-
-            logger.OnStepChanged(ProgressStep.Done, $"Done! Unpacked {context.Files.Count()} files in {Program.GetHumanTime(timer.Elapsed)}.\nUnpacked into {context.ExportPath}.");
-            logger.OnEnded();
         }
 
 
