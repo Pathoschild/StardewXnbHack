@@ -166,7 +166,7 @@ namespace StardewXnbHack.Framework.Writers
                 using (SpriteBatch batch = new SpriteBatch(gpu))
                 {
                     batch.Begin();
-                    batch.Draw(texture, position: Vector2.Zero, Color.White);
+                    batch.Draw(texture, Vector2.Zero, Color.White);
                     batch.End();
                 }
             }
