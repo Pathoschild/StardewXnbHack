@@ -33,10 +33,22 @@ namespace StardewXnbHack.Framework.Writers
         {
             SpriteFont font = (SpriteFont)asset;
 
+            // get texture
+            Texture2D texture = platform == Platform.Windows
+                ? this.RequireField<Texture2D>(font, "textureValue")
+                : this.RequireProperty<Texture2D>(font, "Texture");
+
             // save texture
-            Texture2D texture = this.RequireField<Texture2D>(font, platform == Platform.Windows ? "textureValue" : "_texture");
             using (Stream stream = File.Create($"{toPathWithoutExtension}.png"))
-                texture.SaveAsPng(stream, texture.Width, texture.Height);
+            {
+                if (platform.IsMono() && texture.Format == SurfaceFormat.Dxt3) // MonoGame can't read DXT3 textures directly, need to export through GPU
+                {
+                    using (RenderTarget2D renderTarget = this.RenderWithGpu(texture))
+                        renderTarget.SaveAsPng(stream, texture.Width, texture.Height);
+                }
+                else
+                    texture.SaveAsPng(stream, texture.Width, texture.Height);
+            }
 
             // save font data
             var data = new
@@ -111,6 +123,19 @@ namespace StardewXnbHack.Framework.Writers
             return (T)field.GetValue(font);
         }
 
+        /// <summary>Get a required font property using reflection.</summary>
+        /// <typeparam name="T">The field type.</typeparam>
+        /// <param name="font">The font instance for which to get a value.</param>
+        /// <param name="name">The field name.</param>
+        private T RequireProperty<T>(SpriteFont font, string name)
+        {
+            PropertyInfo property = typeof(SpriteFont).GetProperty(name, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            if (property == null)
+                throw new InvalidOperationException($"Can't access {nameof(SpriteFont)}.{name} property");
+
+            return (T)property.GetValue(font);
+        }
+
         /// <summary>Invoke a required font method using reflection.</summary>
         /// <typeparam name="TReturn">The return type.</typeparam>
         /// <param name="font">The font instance for which to get a method.</param>
@@ -122,6 +147,35 @@ namespace StardewXnbHack.Framework.Writers
                 throw new InvalidOperationException($"Can't access {nameof(SpriteFont)}.{name} method");
 
             return (TReturn)method.Invoke(font, null);
+        }
+
+        /// <summary>Draw a texture to a GPU render target.</summary>
+        /// <param name="texture">The texture to draw.</param>
+        private RenderTarget2D RenderWithGpu(Texture2D texture)
+        {
+            // set render target
+            var gpu = texture.GraphicsDevice;
+            RenderTarget2D target = new RenderTarget2D(gpu, texture.Width, texture.Height);
+            gpu.SetRenderTarget(target);
+
+            // render
+            try
+            {
+                gpu.Clear(Color.Transparent); // set transparent background
+
+                using (SpriteBatch batch = new SpriteBatch(gpu))
+                {
+                    batch.Begin();
+                    batch.Draw(texture, position: Vector2.Zero, Color.White);
+                    batch.End();
+                }
+            }
+            finally
+            {
+                gpu.SetRenderTarget(null);
+            }
+
+            return target;
         }
     }
 }
