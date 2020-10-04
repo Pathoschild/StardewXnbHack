@@ -14,7 +14,7 @@ namespace StardewXnbHack.Framework
         private readonly IUnpackContext Context;
 
         /// <summary>Whether to show a 'press any key to exit' prompt on end.</summary>
-        private readonly bool PressAnyKeyToExit;
+        private readonly bool ShowPressAnyKeyToExit;
 
         /// <summary>The current progress bar written to the console.</summary>
         private ConsoleProgressBar ProgressBar;
@@ -25,11 +25,11 @@ namespace StardewXnbHack.Framework
         *********/
         /// <summary>Construct an instance.</summary>
         /// <param name="context">The context info for the current unpack run.</param>
-        /// <param name="pressAnyKeyToExit">Whether to show a 'press any key to exit' prompt on end.</param>
-        public DefaultConsoleLogger(IUnpackContext context, bool pressAnyKeyToExit)
+        /// <param name="showPressAnyKeyToExit">Whether to show a 'press any key to exit' prompt on end.</param>
+        public DefaultConsoleLogger(IUnpackContext context, bool showPressAnyKeyToExit)
         {
             this.Context = context;
-            this.PressAnyKeyToExit = pressAnyKeyToExit;
+            this.ShowPressAnyKeyToExit = showPressAnyKeyToExit;
         }
 
         /// <inheritdoc />
@@ -73,12 +73,16 @@ namespace StardewXnbHack.Framework
         /// <inheritdoc />
         public void OnEnded()
         {
-            if (this.PressAnyKeyToExit)
-            {
-                Console.WriteLine();
-                Console.WriteLine("Press any key to exit.");
-                Console.ReadKey();
-            }
+            if (this.ShowPressAnyKeyToExit)
+                DefaultConsoleLogger.PressAnyKeyToExit();
+        }
+
+        /// <summary>Show a 'press any key to exit' message and wait for a key press.</summary>
+        public static void PressAnyKeyToExit()
+        {
+            Console.WriteLine();
+            Console.WriteLine("Press any key to exit.");
+            Console.ReadKey();
         }
 
 

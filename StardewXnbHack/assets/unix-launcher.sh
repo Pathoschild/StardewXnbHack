@@ -8,7 +8,7 @@ cd "`dirname "$0"`"
 
 # validate script is being run from the game folder
 if [ ! -f "StardewValley.exe" ] && [ ! -f "Stardew Valley.exe" ] || [ ! -d "mono" ]; then
-    echo "Oops! You must run StardewXnbHack in your Stardew Valley game folder. See usage instructions: https://github.com/Pathoschild/StardewXnbHack#readme.";
+    echo "Oops! StardewXnbHack must be placed in the Stardew Valley game folder.\nSee instructions: https://github.com/Pathoschild/StardewXnbHack#readme.";
     read
 else
     # Get the system architecture

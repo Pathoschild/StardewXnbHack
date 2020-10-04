@@ -28,19 +28,41 @@ namespace StardewXnbHack
             AppDomain.CurrentDomain.AssemblyResolve += Program.CurrentDomain_AssemblyResolve;
 
             // launch app
-            Program.Run();
+            try
+            {
+                Program.Run();
+            }
+            catch (Exception ex)
+            {
+                // not in game folder
+                if (ex is FileNotFoundException fileNotFoundEx)
+                {
+                    AssemblyName assemblyName = new AssemblyName(fileNotFoundEx.FileName);
+                    if (assemblyName.Name == "Stardew Valley" || assemblyName.Name == "StardewValley")
+                    {
+                        Console.WriteLine("Oops! StardewXnbHack must be placed in the Stardew Valley game folder.\nSee instructions: https://github.com/Pathoschild/StardewXnbHack#readme.");
+                        DefaultConsoleLogger.PressAnyKeyToExit();
+                        return;
+                    }
+                }
+
+                // generic unhandled exception
+                Console.WriteLine("Oops! Something went wrong running the unpacker:");
+                Console.WriteLine(ex.ToString());
+                DefaultConsoleLogger.PressAnyKeyToExit();
+            }
         }
 
         /// <summary>Unpack all assets in the content folder and store them in the output folder.</summary>
         /// <param name="game">The game instance through which to unpack files, or <c>null</c> to launch a temporary internal instance.</param>
         /// <param name="gamePath">The absolute path to the game folder, or <c>null</c> to auto-detect it.</param>
         /// <param name="getLogger">Get a custom progress update logger, or <c>null</c> to use the default console logging. Receives the unpack context and default logger as arguments.</param>
-        /// <param name="pressAnyKeyToExit">Whether the default logger shows a 'press any key to exit' prompt.</param>
-        public static void Run(Game1 game = null, string gamePath = null, Func<IUnpackContext, IProgressLogger, IProgressLogger> getLogger = null, bool pressAnyKeyToExit = true)
+        /// <param name="showPressAnyKeyToExit">Whether the default logger should show a 'press any key to exit' prompt when it finishes.</param>
+        public static void Run(Game1 game = null, string gamePath = null, Func<IUnpackContext, IProgressLogger, IProgressLogger> getLogger = null, bool showPressAnyKeyToExit = true)
         {
             // init logging
             UnpackContext context = new UnpackContext();
-            IProgressLogger logger = new DefaultConsoleLogger(context, pressAnyKeyToExit);
+            IProgressLogger logger = new DefaultConsoleLogger(context, showPressAnyKeyToExit);
 
             try
             {
@@ -67,7 +89,7 @@ namespace StardewXnbHack
                 context.GamePath = gamePath ?? platform.DetectGameFolder();
                 if (context.GamePath == null || !Directory.Exists(context.GamePath))
                 {
-                    logger.OnFatalError("Can't find Stardew Valley folder.");
+                    logger.OnFatalError("Can't find Stardew Valley folder. Try running StardewXnbHack from the game folder instead.");
                     return;
                 }
 
