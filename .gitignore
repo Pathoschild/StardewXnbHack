@@ -18,6 +18,9 @@ _ReSharper*/
 *.[Rr]e[Ss]harper
 *.DotSettings.user
 
+# Rider
+.idea/
+
 # NuGet packages
 *.nupkg
 **/packages/*
