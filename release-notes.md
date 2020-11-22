@@ -1,8 +1,10 @@
 [← back to readme](README.md)
 
 # Release notes
-## Upcoming release
-* Updated to TMXTile 1.5.8 to fix `.tmx` map files losing tile index properties.
+## 1.0.1
+Released 21 November 2020.
+
+* Updated TMXTile to 1.5.8 to fix `.tmx` map files losing tile index properties.
 
 ## 1.0
 Released 04 October 2020.
