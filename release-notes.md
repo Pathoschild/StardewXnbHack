@@ -1,6 +1,9 @@
 [← back to readme](README.md)
 
 # Release notes
+## Upcoming release
+* Updated TMXTile to 1.5.9 to fix duplicate tile index properties.
+
 ## 1.0.1
 Released 21 November 2020.
 
