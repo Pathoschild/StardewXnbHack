@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using StardewModdingAPI.Toolkit;
@@ -36,12 +37,20 @@ namespace StardewXnbHack.Framework
                 : new ModToolkit().GetGameFolders().FirstOrDefault()?.FullName;
         }
 
-        /// <summary>Get the relative path from the game folder to the content folder.</summary>
-        public string GetRelativeContentPath()
+        /// <summary>Get the relative path from the game folder to the content folder, if any.</summary>
+        /// <param name="gamePath">The game path.</param>
+        public string GetRelativeContentPath(string gamePath)
         {
-            return this.Platform == Platform.Mac
-                ? "../../Resources/Content"
-                : "Content";
+            if (gamePath == null)
+                return null;
+
+            foreach (string relativePath in this.GetPossibleRelativeContentPaths())
+            {
+                if (Directory.Exists(Path.Combine(gamePath, relativePath)))
+                    return relativePath;
+            }
+
+            return null;
         }
 
 
@@ -54,7 +63,7 @@ namespace StardewXnbHack.Framework
         {
             return
                 File.Exists(Path.Combine(path, this.GetExecutableFileName()))
-                && Directory.Exists(Path.Combine(path, this.GetRelativeContentPath()));
+                && this.GetRelativeContentPath(path) != null;
         }
 
         /// <summary>Get the filename for the Stardew Valley executable.</summary>
@@ -63,6 +72,28 @@ namespace StardewXnbHack.Framework
             return this.Platform == Platform.Windows
                 ? "Stardew Valley.exe"
                 : "StardewValley.exe";
+        }
+
+        /// <summary>Get the possible relative paths for the current platform.</summary>
+        private IEnumerable<string> GetPossibleRelativeContentPaths()
+        {
+            // under game folder on most platforms
+            if (this.Platform != Platform.Mac)
+                yield return "Content";
+
+            // MacOS
+            else
+            {
+                // Steam paths
+                // - game path: StardewValley/Contents/MacOS
+                // - content:   StardewValley/Contents/Resources/Content
+                yield return "../Resources/Content";
+
+                // GOG paths
+                // - game path: Stardew Valley.app/Contents/MacOS
+                // - content:   Stardew Valley.app/Resources/Content
+                yield return "../../Resources/Content";
+            }
         }
     }
 }
