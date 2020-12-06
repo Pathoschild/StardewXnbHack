@@ -4,6 +4,7 @@
 ## Upcoming release
 * On MacOS, assets are now unpacked into the game folder instead of the resources folder for
   consistency with other platforms.
+* Improved error if the game's content folder is missing.
 * Fixed duplicate tile index properties in some cases.
 * Fixed unpack error on MacOS with Steam.
 
