@@ -85,18 +85,24 @@ namespace StardewXnbHack
                     new DataWriter() // check last due to more expensive CanWrite
                 };
 
-                // get game info
+                // get paths
                 var platform = new PlatformContext();
-                context.GamePath = gamePath ?? platform.DetectGameFolder();
-                if (context.GamePath == null || !Directory.Exists(context.GamePath))
                 {
-                    logger.OnFatalError("Can't find Stardew Valley folder. Try running StardewXnbHack from the game folder instead.");
-                    return;
+                    if (platform.TryDetectGamePaths(gamePath, out gamePath, out string contentPath))
+                    {
+                        context.GamePath = gamePath;
+                        context.ContentPath = contentPath;
+                    }
+                    else
+                    {
+                        logger.OnFatalError(gamePath == null
+                            ? "Can't find Stardew Valley folder. Try running StardewXnbHack from the game folder instead."
+                            : $"Can't find the content folder for the game at {gamePath}. Is the game installed correctly?"
+                        );
+                        return;
+                    }
                 }
-
-                // get import/export paths
-                context.ContentPath = Path.Combine(context.GamePath, platform.GetRelativeContentPath());
-                context.ExportPath = context.ContentPath + " (unpacked)";
+                context.ExportPath = Path.Combine(context.GamePath, "Content (unpacked)");
                 logger.OnStepChanged(ProgressStep.GameFound, $"Found game folder: {context.GamePath}.");
 
                 // symlink files on Linux/Mac

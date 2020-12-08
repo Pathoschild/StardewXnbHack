@@ -1,10 +1,18 @@
 [← back to readme](README.md)
 
 # Release notes
+## 1.0.2
+Released 07 December 2020.
+
+* Assets on MacOS are now unpacked into the game folder instead of resources, for consistency with other platforms.
+* Improved error if the game's content folder is missing.
+* Fixed duplicate tile index properties in some cases.
+* Fixed unpack error on MacOS with Steam.
+
 ## 1.0.1
 Released 21 November 2020.
 
-* Updated TMXTile to 1.5.8 to fix `.tmx` map files losing tile index properties.
+* Fixed `.tmx` map files losing tile index properties.
 
 ## 1.0
 Released 04 October 2020.
