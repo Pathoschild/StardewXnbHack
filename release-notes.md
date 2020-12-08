@@ -1,9 +1,10 @@
 [← back to readme](README.md)
 
 # Release notes
-## Upcoming release
-* On MacOS, assets are now unpacked into the game folder instead of the resources folder for
-  consistency with other platforms.
+## 1.0.2
+Released 07 December 2020.
+
+* Assets on MacOS are now unpacked into the game folder instead of resources, for consistency with other platforms.
 * Improved error if the game's content folder is missing.
 * Fixed duplicate tile index properties in some cases.
 * Fixed unpack error on MacOS with Steam.
