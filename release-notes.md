@@ -1,6 +1,11 @@
 [← back to readme](README.md)
 
 # Release notes
+## 1.0.3
+Released 21 December 2020.
+
+* Updated for Stardew Valley 1.5.
+
 ## 1.0.2
 Released 07 December 2020.
 
