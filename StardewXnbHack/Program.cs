@@ -59,7 +59,7 @@ namespace StardewXnbHack
         /// <param name="gamePath">The absolute path to the game folder, or <c>null</c> to auto-detect it.</param>
         /// <param name="getLogger">Get a custom progress update logger, or <c>null</c> to use the default console logging. Receives the unpack context and default logger as arguments.</param>
         /// <param name="showPressAnyKeyToExit">Whether the default logger should show a 'press any key to exit' prompt when it finishes.</param>
-        public static void Run(Game1 game = null, string gamePath = null, Func<IUnpackContext, IProgressLogger, IProgressLogger> getLogger = null, bool showPressAnyKeyToExit = true)
+        public static void Run(GameRunner game = null, string gamePath = null, Func<IUnpackContext, IProgressLogger, IProgressLogger> getLogger = null, bool showPressAnyKeyToExit = true)
         {
             // init logging
             UnpackContext context = new UnpackContext();
@@ -251,20 +251,20 @@ namespace StardewXnbHack
         /// <summary>Create a temporary game instance for the unpacker.</summary>
         /// <param name="platform">The platform-specific context.</param>
         /// <param name="contentPath">The absolute path to the content folder to import.</param>
-        private static Game1 CreateTemporaryGameInstance(PlatformContext platform, string contentPath)
+        private static GameRunner CreateTemporaryGameInstance(PlatformContext platform, string contentPath)
         {
             var foregroundColor = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.DarkGray;
 
             try
             {
-
-                Game1 game = new Game1();
+                GameRunner game = new GameRunner();
+                GameRunner.instance = game;
 
                 if (platform.Is(Platform.Windows))
                 {
                     game.Content.RootDirectory = contentPath;
-                    MethodInfo startGameLoop = typeof(Game1).GetMethod("StartGameLoop", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
+                    MethodInfo startGameLoop = typeof(GameRunner).GetMethod("StartGameLoop", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
                     if (startGameLoop == null)
                         throw new InvalidOperationException("Can't locate game method 'StartGameLoop' to initialise internal game instance.");
                     startGameLoop.Invoke(game, new object[0]);

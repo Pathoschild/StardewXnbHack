@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using StardewModdingAPI.Toolkit.Utilities;
@@ -6,6 +7,7 @@ using TMXTile;
 using xTile;
 using xTile.Dimensions;
 using xTile.Layers;
+using xTile.Tiles;
 
 namespace StardewXnbHack.Framework.Writers
 {
@@ -58,16 +60,43 @@ namespace StardewXnbHack.Framework.Writers
                 layer.TileSize = new Size(MapWriter.TileSize, MapWriter.TileSize);
             }
 
+            // fix image sources (game overrides them in-memory)
+            IDictionary<TileSheet, string> imageSources = new Dictionary<TileSheet, string>();
+            foreach (var sheet in map.TileSheets)
+            {
+                imageSources[sheet] = sheet.ImageSource;
+                sheet.ImageSource = this.GetOriginalImageSource(relativePath, sheet.ImageSource);
+            }
+
             // save file
             using (Stream stream = File.Create($"{toPathWithoutExtension}.tmx"))
                 this.Format.Store(map, stream, DataEncodingType.CSV);
 
-            // undo tile size changes
+            // undo changes
             foreach (var layer in map.Layers)
                 layer.TileSize = tileSizes[layer];
+            foreach (var sheet in map.TileSheets)
+                sheet.ImageSource = imageSources[sheet];
 
             error = null;
             return true;
+        }
+
+
+        /*********
+        ** Public methods
+        *********/
+        /// <summary>Get the image source for a map tilesheet without the game's automatic path changes.</summary>
+        /// <param name="relativeMapPath">The relative path to the map file within the content folder.</param>
+        /// <param name="imageSource">The tilesheet image source.</param>
+        private string GetOriginalImageSource(string relativeMapPath, string imageSource)
+        {
+            string mapDirPath = PathUtilities.NormalizePath(Path.GetDirectoryName(relativeMapPath));
+            string normalizedImageSource = PathUtilities.NormalizePath(imageSource);
+
+            return normalizedImageSource.StartsWith($"{mapDirPath}{PathUtilities.PreferredPathSeparator}", StringComparison.OrdinalIgnoreCase)
+                ? imageSource.Substring(mapDirPath.Length + 1)
+                : imageSource;
         }
     }
 }
