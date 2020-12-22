@@ -41,6 +41,14 @@ License | MIT | GPL | n/a
 
 <sup>¹ `.tmx` is the [preferred map format](https://stardewvalleywiki.com/Modding:Maps#Map_formats), but you can open the `.tbin` file in Tiled and export it as `.tmx`.</sup>
 
+### On Linux, the console doesn't open or shows a "Magic number is wrong" error
+That's a [Mono bug with some terminals](https://github.com/mono/mono/issues/6752) in the version
+used by Stardew Valley. You can fix it by...
+
+* changing your default terminal to a supported one like xterm;
+* or opening a terminal in the game folder and launching the unpacker like this:
+  > export TERM=xterm &&./StardewXNBHack.sh
+
 ## For StardewXnbHack developers
 This section explains how to edit or compile StardewXnbHack from the source code. Most users should
 [use the release version](#usage) instead.
