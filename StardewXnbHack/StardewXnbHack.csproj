@@ -13,6 +13,7 @@
     <Platforms>x86</Platforms>
     <OutputType>Exe</OutputType>
     <ApplicationIcon>assets/icon.ico</ApplicationIcon>
+    <DefineConstants Condition="$(OS) == 'Windows_NT'">$(DefineConstants);IS_FOR_WINDOWS</DefineConstants>
 
     <!--mod build package-->
     <CopyModReferencesToBuildOutput>True</CopyModReferencesToBuildOutput>

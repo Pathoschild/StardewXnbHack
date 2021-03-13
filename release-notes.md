@@ -1,6 +1,9 @@
 [← back to readme](README.md)
 
 # Release notes
+## Upcoming release
+* Added a descriptive error if you install the wrong version (e.g. Windows version on MacOS), which previous failed with confusing errors.
+
 ## 1.0.3
 Released 21 December 2020.
 

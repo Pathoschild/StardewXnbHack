@@ -22,6 +22,9 @@ namespace StardewXnbHack
         /// <summary>The console app entry method.</summary>
         internal static void Main()
         {
+            // check platform
+            Program.AssertPlatform();
+
             // Add fallback assembly resolution that loads DLLs from a 'smapi-internal' subfolder,
             // so it can be run from the game folder. This must be set before any references to
             // game or toolkit types (including IAssetWriter which references the toolkit's
@@ -219,6 +222,26 @@ namespace StardewXnbHack
         /*********
         ** Private methods
         *********/
+        /// <summary>Assert that the current platform matches the one StardewXnbHack was compiled for.</summary>
+        private static void AssertPlatform()
+        {
+            bool isWindows = Environment.OSVersion.Platform != PlatformID.MacOSX && Environment.OSVersion.Platform != PlatformID.Unix;
+
+#if IS_FOR_WINDOWS
+            if (!isWindows)
+            {
+                Console.WriteLine("Oops! This is the Linux/MacOS version of StardewXnbHack. Make sure to install the Windows version instead.");
+                DefaultConsoleLogger.PressAnyKeyToExit();
+            }
+#else
+            if (isWindows)
+            {
+                Console.WriteLine("Oops! This is the Windows version of StardewXnbHack. Make sure to install the version for your OS type instead.");
+                DefaultConsoleLogger.PressAnyKeyToExit();
+            }
+#endif
+        }
+
         /// <summary>Method called when assembly resolution fails, which may return a manually resolved assembly.</summary>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event arguments.</param>
