@@ -1,8 +1,11 @@
 [← back to readme](README.md)
 
 # Release notes
-## Upcoming release
-* Added a descriptive error if you install the wrong version (e.g. Windows version on MacOS), which previous failed with confusing errors.
+## 1.0.4
+Released 23 March 2021.
+
+* Added a descriptive error if you install the wrong version (e.g. the Windows version on MacOS).
+* Updated for SMAPI 3.9.5 (thanks to nyrdosh!).
 
 ## 1.0.3
 Released 21 December 2020.
