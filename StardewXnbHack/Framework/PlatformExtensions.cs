@@ -8,8 +8,7 @@ namespace StardewXnbHack.Framework
         /// <param name="platform">The current platform.</param>
         public static bool IsMono(this Platform platform)
         {
-            string platformAsString = platform.ToString();
-            return platformAsString == nameof(Platform.Linux) || platformAsString == nameof(Platform.Mac);
+            return platform == Platform.Linux || platform == Platform.Mac;
         }
     }
 }
