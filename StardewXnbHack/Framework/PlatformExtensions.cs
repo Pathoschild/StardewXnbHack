@@ -2,6 +2,7 @@ using StardewModdingAPI.Toolkit.Utilities;
 
 namespace StardewXnbHack.Framework
 {
+    /// <summary>Provides extension methods for the <see cref="Platform" /> enum.</summary>
     internal static class PlatformExtensions
     {
         /// <summary>Get whether the platform uses Mono.</summary>
