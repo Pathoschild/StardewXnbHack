@@ -33,13 +33,22 @@ The main differences at a glance:
 --------------------- | ---------------- | ------ | -----------
 Supported asset types | ✓ images<br />✓ maps<br />✓ dictionary data<br />✓ font texture<br />✓ font XML data<br />✓ structured data | ✓ images<br />✓ maps<br />✓ dictionary data<br />✓ font textures<br />✓ font XML data<br />❑ structured data | ✓ images<br />✓ maps<br />✓ dictionary data<br />✓ font textures<br />❑ font XML data<br />❑ structured data
 Export formats | ✓ `.png` for images<br />✓ `.tmx` for maps<br />✓ `.json` for data ([CP](https://stardewvalleywiki.com/Modding:Content_Patcher)-compatible) | ✓ `.png` for images<br />✓ `.tbin` for maps¹<br />❑ `.json` for data (custom format) | ✓ `.png` for images<br />✓ `.tbin` for maps¹<br />❑ `.yaml` for data
-Supported platforms | ✓ Windows<br />✓ Linux<br />✓ Mac | ✓ Windows<br />✓ Linux<br />✓ Mac | ✓ Windows<br />❑ Linux<br />❑ Mac
+Supported platforms | ✓ Windows<br />✓ Linux²<br />✓ Mac² | ✓ Windows<br />✓ Linux<br />✓ Mac | ✓ Windows<br />❑ Linux<br />❑ Mac
 Supported operations | ✓ unpack<br />❑ pack | ✓ unpack<br />✓ pack  (uncompressed) | ✓ unpack<br />✓ pack
 Maintainable | ✓ easy to update | ❑ complex | ❑ complex, closed-source
 Sample unpack time<br />(full `Content` folder) | ≈0m 43s | ≈6m 5s | ≈2m 20s
 License | MIT | GPL | n/a
 
-<sup>¹ `.tmx` is the [preferred map format](https://stardewvalleywiki.com/Modding:Maps#Map_formats), but you can open the `.tbin` file in Tiled and export it as `.tmx`.</sup>
+<sup>¹ `.tmx` is the [preferred map format](https://stardewvalleywiki.com/Modding:Maps#Map_formats), but you can open the `.tbin` file in Tiled and export it as `.tmx`.</sup>  
+<sup>² [Some image assets don't export correctly on Linux/Mac](https://github.com/Pathoschild/StardewXnbHack/issues/9) currently.</sup>
+
+### On Linux, the console doesn't open or shows a "Magic number is wrong" error
+That's a [Mono bug with some terminals](https://github.com/mono/mono/issues/6752) in the version
+used by Stardew Valley. You can fix it by...
+
+* changing your default terminal to a supported one like xterm;
+* or opening a terminal in the game folder and launching the unpacker like this:
+  > export TERM=xterm &&./StardewXNBHack.sh
 
 ## For StardewXnbHack developers
 This section explains how to edit or compile StardewXnbHack from the source code. Most users should
