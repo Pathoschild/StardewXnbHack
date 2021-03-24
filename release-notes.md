@@ -1,6 +1,9 @@
 [← back to readme](README.md)
 
 # Release notes
+## Upcoming release
+* Fixed _cannot be loaded into a Reach GraphicsDevice_ error for some users.
+
 ## 1.0.4
 Released 23 March 2021.
 

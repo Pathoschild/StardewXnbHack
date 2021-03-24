@@ -284,6 +284,8 @@ namespace StardewXnbHack
                 GameRunner game = new GameRunner();
                 GameRunner.instance = game;
 
+                Game1.graphics.GraphicsProfile = GraphicsProfile.HiDef;
+
                 if (platform.Is(Platform.Windows))
                 {
                     game.Content.RootDirectory = contentPath;
