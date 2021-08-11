@@ -92,8 +92,8 @@ namespace StardewXnbHack.Framework
                 return null;
 
             // has game files
-            bool hasExecutable = File.Exists(Path.Combine(gameDir.FullName, this.GetExecutableFileName()));
-            if (!hasExecutable)
+            bool hasGameDll = File.Exists(Path.Combine(gameDir.FullName, "Stardew Valley.dll"));
+            if (!hasGameDll)
                 return null;
 
             // isn't the build folder when compiled directly
@@ -102,14 +102,6 @@ namespace StardewXnbHack.Framework
                 return null;
 
             return gameDir.FullName;
-        }
-
-        /// <summary>Get the filename for the Stardew Valley executable.</summary>
-        private string GetExecutableFileName()
-        {
-            return this.Platform == Platform.Windows
-                ? "Stardew Valley.exe"
-                : "StardewValley.exe";
         }
 
         /// <summary>Get the absolute path to the content folder for a given game, if found.</summary>

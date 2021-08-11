@@ -2,6 +2,8 @@
 
 # Release notes
 ## Upcoming release
+* Updated for Stardew Valley 1.5.5.
+* Fixed some textures not unpacked correctly on Linux/macOS.
 * Fixed _cannot be loaded into a Reach GraphicsDevice_ error for some users.
 
 ## 1.0.4

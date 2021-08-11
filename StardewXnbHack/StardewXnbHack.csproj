@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <!--metadata-->
     <Authors>Pathoschild</Authors>
@@ -9,8 +8,8 @@
     <Version>1.0.4</Version>
 
     <!--build-->
-    <TargetFramework>net452</TargetFramework>
-    <Platforms>x86</Platforms>
+    <TargetFramework>net5.0</TargetFramework>
+    <Platforms>x64</Platforms>
     <OutputType>Exe</OutputType>
     <ApplicationIcon>assets/icon.ico</ApplicationIcon>
     <DefineConstants Condition="$(OS) == 'Windows_NT'">$(DefineConstants);IS_FOR_WINDOWS</DefineConstants>
@@ -24,7 +23,7 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Pathoschild.Stardew.ModBuildConfig" Version="3.2.2" />
+    <PackageReference Include="Pathoschild.Stardew.ModBuildConfig" Version="3.4.0" />
     <PackageReference Include="Platonymous.TMXTile" Version="1.5.9" />
   </ItemGroup>
 
@@ -41,9 +40,8 @@
     <Move SourceFiles="$(TargetDir)\assets\unix-launcher.sh" DestinationFiles="$(TargetDir)\StardewXnbHack.command" />
     <Copy SourceFiles="$(TargetDir)\StardewXnbHack.command" DestinationFiles="$(TargetDir)\StardewXnbHack.sh" />
 
-    <Exec Command="chmod 755 &quot;$(TargetDir)\StardewXnbHack.command&quot;" />
-    <Exec Command="chmod 755 &quot;$(TargetDir)\StardewXnbHack.sh&quot;" />
-    <Exec Command="chmod 755 &quot;$(TargetDir)\StardewXnbHack.exe&quot;" />
+    <Exec Command="chmod 755 &quot;$(TargetDir)StardewXnbHack.command&quot;" />
+    <Exec Command="chmod 755 &quot;$(TargetDir)StardewXnbHack.sh&quot;" />
+    <Exec Command="chmod 755 &quot;$(TargetDir)StardewXnbHack&quot;" />
   </Target>
-
 </Project>
