@@ -18,7 +18,7 @@ OS      | instruction
 ------- | -----------
 Windows | double-click `StardewXnbHack.exe`.
 Linux   | execute `StardewXnbHack.sh`.
-MacOS   | double-click `StardewXnbHack.command`.
+macOS   | double-click `StardewXnbHack.command`.
 
 ## FAQs
 ### How does this compare to other XNB unpackers?
@@ -75,13 +75,13 @@ on the wiki for the first-time setup.
     StardewXnbHack 1.0.0 for Windows.zip/
        StardewXnbHack.exe
     ```
-3. Compile it on Linux or Mac, and create two zip files like this:
+3. Compile it on Linux or macOS, and create two zip files like this:
     ```
     StardewXnbHack 1.0.0 for Linux.zip/
        StardewXnbHack.exe
        StardewXnbHack.sh
 
-    StardewXnbHack 1.0.0 for MacOS.zip/
+    StardewXnbHack 1.0.0 for macOS.zip/
        StardewXnbHack.command
        StardewXnbHack.exe
     ```

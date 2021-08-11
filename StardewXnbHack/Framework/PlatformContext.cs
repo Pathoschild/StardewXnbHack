@@ -53,7 +53,7 @@ namespace StardewXnbHack.Framework
                 }
 
                 // if game folder exists without a content folder, track the first found game path (i.e. the highest-priority one)
-                gamePath = gamePath ?? curGamePath;
+                gamePath ??= curGamePath;
             }
 
             return false;
@@ -136,7 +136,7 @@ namespace StardewXnbHack.Framework
             if (this.Platform != Platform.Mac)
                 yield return "Content";
 
-            // MacOS
+            // macOS
             else
             {
                 // Steam paths

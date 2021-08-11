@@ -236,7 +236,7 @@ namespace StardewXnbHack
 #else
             if (isWindows)
             {
-                Console.WriteLine("Oops! This is the Linux/MacOS version of StardewXnbHack. Make sure to install the version for your OS type instead.");
+                Console.WriteLine("Oops! This is the Linux/macOS version of StardewXnbHack. Make sure to install the version for your OS type instead.");
                 DefaultConsoleLogger.PressAnyKeyToExit();
             }
 #endif
