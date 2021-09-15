@@ -17,6 +17,17 @@ namespace StardewXnbHack
     public static class Program
     {
         /*********
+        ** Fields
+        *********/
+        /// <summary>The relative paths to search for unresolved assembly files.</summary>
+        private static readonly string[] RelativeAssemblyProbePaths =
+        {
+            "", // app directory
+            "smapi-internal"
+        };
+
+
+        /*********
         ** Public methods
         *********/
         /// <summary>The console app entry method.</summary>
@@ -42,7 +53,7 @@ namespace StardewXnbHack
                 if (ex is FileNotFoundException fileNotFoundEx)
                 {
                     AssemblyName assemblyName = new AssemblyName(fileNotFoundEx.FileName);
-                    if (assemblyName.Name == "Stardew Valley" || assemblyName.Name == "StardewValley")
+                    if (assemblyName.Name == "Stardew Valley")
                     {
                         Console.WriteLine("Oops! StardewXnbHack must be placed in the Stardew Valley game folder.\nSee instructions: https://github.com/Pathoschild/StardewXnbHack#readme.");
                         DefaultConsoleLogger.PressAnyKeyToExit();
@@ -99,7 +110,7 @@ namespace StardewXnbHack
                     else
                     {
                         logger.OnFatalError(gamePath == null
-                            ? "Can't find Stardew Valley folder. Try running StardewXnbHack from the game folder instead."
+                            ? "Can't find the Stardew Valley folder. Try running StardewXnbHack from the game folder instead."
                             : $"Can't find the content folder for the game at {gamePath}. Is the game installed correctly?"
                         );
                         return;
@@ -157,15 +168,15 @@ namespace StardewXnbHack
                         logger.OnFileUnpacking(assetName);
 
                         // read asset
-                        object asset = null;
+                        object asset;
                         try
                         {
                             asset = game.Content.Load<object>(assetName);
                         }
                         catch (Exception ex)
                         {
-                            if (platform.Platform.IsMono() && ex.Message == "This does not appear to be a MonoGame MGFX file!")
-                                logger.OnFileUnpackFailed(relativePath, UnpackFailedReason.UnsupportedFileType, $"{nameof(Effect)} isn't a supported asset type."); // use same friendly error as Windows
+                            if (ex.Message == "This does not appear to be a MonoGame MGFX file!")
+                                logger.OnFileUnpackFailed(relativePath, UnpackFailedReason.UnsupportedFileType, $"{nameof(Effect)} isn't a supported asset type.");
                             else
                                 logger.OnFileUnpackFailed(relativePath, UnpackFailedReason.ReadError, $"read error: {ex.Message}");
                             ExportRawXnb();
@@ -236,7 +247,7 @@ namespace StardewXnbHack
 #else
             if (isWindows)
             {
-                Console.WriteLine("Oops! This is the Linux/MacOS version of StardewXnbHack. Make sure to install the version for your OS type instead.");
+                Console.WriteLine("Oops! This is the Linux/macOS version of StardewXnbHack. Make sure to install the version for your OS type instead.");
                 DefaultConsoleLogger.PressAnyKeyToExit();
             }
 #endif
@@ -247,28 +258,48 @@ namespace StardewXnbHack
         /// <param name="e">The event arguments.</param>
         private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs e)
         {
-            // get path to 'smapi-internal'
-            string searchPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "smapi-internal");
-            if (!Directory.Exists(searchPath))
+            // get assembly name
+            AssemblyName name = new AssemblyName(e.Name);
+            if (name.Name == null)
                 return null;
 
-            // try to resolve DLL
-            try
+            // check search folders
+            foreach (string relativePath in Program.RelativeAssemblyProbePaths)
             {
-                AssemblyName name = new AssemblyName(e.Name);
-                foreach (FileInfo dll in new DirectoryInfo(searchPath).EnumerateFiles("*.dll"))
+                // get absolute path of search folder
+                string searchPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativePath);
+                if (!Directory.Exists(searchPath))
+                    continue;
+
+                // try to resolve DLL
+                try
                 {
-                    if (name.Name.Equals(AssemblyName.GetAssemblyName(dll.FullName).Name, StringComparison.OrdinalIgnoreCase))
-                        return Assembly.LoadFrom(dll.FullName);
-                }
+                    foreach (FileInfo dll in new DirectoryInfo(searchPath).EnumerateFiles("*.dll"))
+                    {
+                        // get assembly name
+                        string dllAssemblyName;
+                        try
+                        {
+                            dllAssemblyName = AssemblyName.GetAssemblyName(dll.FullName).Name;
+                        }
+                        catch
+                        {
+                            continue;
+                        }
 
-                return null;
+                        // check for match
+                        if (name.Name.Equals(dllAssemblyName, StringComparison.OrdinalIgnoreCase))
+                            return Assembly.LoadFrom(dll.FullName);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error resolving assembly: {ex}");
+                    return null;
+                }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error resolving assembly: {ex}");
-                return null;
-            }
+
+            return null;
         }
 
         /// <summary>Create a temporary game instance for the unpacker.</summary>
@@ -284,16 +315,9 @@ namespace StardewXnbHack
                 GameRunner game = new GameRunner();
                 GameRunner.instance = game;
 
-                if (platform.Is(Platform.Windows))
-                {
-                    game.Content.RootDirectory = contentPath;
-                    MethodInfo startGameLoop = typeof(GameRunner).GetMethod("StartGameLoop", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
-                    if (startGameLoop == null)
-                        throw new InvalidOperationException("Can't locate game method 'StartGameLoop' to initialise internal game instance.");
-                    startGameLoop.Invoke(game, new object[0]);
-                }
-                else
-                    game.RunOneFrame();
+                Game1.graphics.GraphicsProfile = GraphicsProfile.HiDef;
+
+                game.RunOneFrame();
 
                 return game;
             }

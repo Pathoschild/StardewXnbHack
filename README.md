@@ -18,7 +18,7 @@ OS      | instruction
 ------- | -----------
 Windows | double-click `StardewXnbHack.exe`.
 Linux   | execute `StardewXnbHack.sh`.
-MacOS   | double-click `StardewXnbHack.command`.
+macOS   | double-click `StardewXnbHack.command`.
 
 ## FAQs
 ### How does this compare to other XNB unpackers?
@@ -33,14 +33,13 @@ The main differences at a glance:
 --------------------- | ---------------- | ------ | -----------
 Supported asset types | ✓ images<br />✓ maps<br />✓ dictionary data<br />✓ font texture<br />✓ font XML data<br />✓ structured data | ✓ images<br />✓ maps<br />✓ dictionary data<br />✓ font textures<br />✓ font XML data<br />❑ structured data | ✓ images<br />✓ maps<br />✓ dictionary data<br />✓ font textures<br />❑ font XML data<br />❑ structured data
 Export formats | ✓ `.png` for images<br />✓ `.tmx` for maps<br />✓ `.json` for data ([CP](https://stardewvalleywiki.com/Modding:Content_Patcher)-compatible) | ✓ `.png` for images<br />✓ `.tbin` for maps¹<br />❑ `.json` for data (custom format) | ✓ `.png` for images<br />✓ `.tbin` for maps¹<br />❑ `.yaml` for data
-Supported platforms | ✓ Windows<br />✓ Linux²<br />✓ Mac² | ✓ Windows<br />✓ Linux<br />✓ Mac | ✓ Windows<br />❑ Linux<br />❑ Mac
+Supported platforms | ✓ Windows<br />✓ Linux<br />✓ Mac | ✓ Windows<br />✓ Linux<br />✓ Mac | ✓ Windows<br />❑ Linux<br />❑ Mac
 Supported operations | ✓ unpack<br />❑ pack | ✓ unpack<br />✓ pack  (uncompressed) | ✓ unpack<br />✓ pack
 Maintainable | ✓ easy to update | ❑ complex | ❑ complex, closed-source
 Sample unpack time<br />(full `Content` folder) | ≈0m 43s | ≈6m 5s | ≈2m 20s
 License | MIT | GPL | n/a
 
-<sup>¹ `.tmx` is the [preferred map format](https://stardewvalleywiki.com/Modding:Maps#Map_formats), but you can open the `.tbin` file in Tiled and export it as `.tmx`.</sup>  
-<sup>² [Some image assets don't export correctly on Linux/Mac](https://github.com/Pathoschild/StardewXnbHack/issues/9) currently.</sup>
+<sup>¹ `.tmx` is the [preferred map format](https://stardewvalleywiki.com/Modding:Maps#Map_formats), but you can open the `.tbin` file in Tiled and export it as `.tmx`.</sup>
 
 ### On Linux, the console doesn't open or shows a "Magic number is wrong" error
 That's a [Mono bug with some terminals](https://github.com/mono/mono/issues/6752) in the version
@@ -73,17 +72,21 @@ on the wiki for the first-time setup.
 2. Compile it on Windows, and create a zip file like this:
     ```
     StardewXnbHack 1.0.0 for Windows.zip/
+       StardewXnbHack.dll
        StardewXnbHack.exe
+       StardewXnbHack.runtimeconfig.json
     ```
-3. Compile it on Linux or Mac, and create two zip files like this:
+3. Compile it on Linux or macOS, and create two zip files like this:
     ```
     StardewXnbHack 1.0.0 for Linux.zip/
-       StardewXnbHack.exe
+       StardewXnbHack
+       StardewXnbHack.dll
        StardewXnbHack.sh
 
-    StardewXnbHack 1.0.0 for MacOS.zip/
+    StardewXnbHack 1.0.0 for macOS.zip/
        StardewXnbHack.command
-       StardewXnbHack.exe
+       StardewXnbHack
+       StardewXnbHack.dll
     ```
 4. Post a release with all three zip files.
 
