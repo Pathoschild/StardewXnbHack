@@ -1,7 +1,9 @@
 [← back to readme](README.md)
 
 # Release notes
-## Upcoming release
+## 1.0.5
+Released 15 September 2021.
+
 * Updated for Stardew Valley 1.5.5.
 * Fixed some textures not unpacked correctly on Linux/macOS.
 * Fixed _cannot be loaded into a Reach GraphicsDevice_ error for some users.
