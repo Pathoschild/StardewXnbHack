@@ -79,13 +79,11 @@ on the wiki for the first-time setup.
 3. Compile it on Linux or macOS, and create two zip files like this:
     ```
     StardewXnbHack 1.0.0 for Linux.zip/
-       StardewXnbHack
        StardewXnbHack.dll
        StardewXnbHack.sh
 
     StardewXnbHack 1.0.0 for macOS.zip/
        StardewXnbHack.command
-       StardewXnbHack
        StardewXnbHack.dll
     ```
 4. Post a release with all three zip files.

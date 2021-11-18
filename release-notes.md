@@ -1,6 +1,10 @@
 [← back to readme](README.md)
 
 # Release notes
+## Upcoming release
+* Added .NET 5 installed check on Linux/macOS.
+* Fixed macOS launch error.
+
 ## 1.0.5
 Released 15 September 2021.
 
