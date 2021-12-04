@@ -34,14 +34,23 @@
 
   <ItemGroup>
     <None Update="assets\unix-launcher.sh" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="assets\StardewXnbHack.deps.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
-  <Target Name="PrepareUnixBuild" AfterTargets="AfterBuild" Condition="'$(OS)' != 'Windows_NT'">
+  <Target Name="PostBuildSteps" AfterTargets="AfterBuild">
+    <CallTarget Targets="PrepareUnixBuild;FixDepsJson" />
+  </Target>
+  
+  <Target Name="PrepareUnixBuild" Condition="'$(OS)' != 'Windows_NT'">
     <Move SourceFiles="$(TargetDir)\assets\unix-launcher.sh" DestinationFiles="$(TargetDir)\StardewXnbHack.command" />
     <Copy SourceFiles="$(TargetDir)\StardewXnbHack.command" DestinationFiles="$(TargetDir)\StardewXnbHack.sh" />
 
     <Exec Command="chmod 755 &quot;$(TargetDir)StardewXnbHack.command&quot;" />
     <Exec Command="chmod 755 &quot;$(TargetDir)StardewXnbHack.sh&quot;" />
     <Exec Command="chmod 755 &quot;$(TargetDir)StardewXnbHack&quot;" />
+  </Target>
+
+  <Target Name="FixDepsJson">
+    <Move SourceFiles="$(TargetDir)\assets\StardewXnbHack.deps.json" DestinationFiles="$(TargetDir)\StardewXnbHack.deps.json" />
   </Target>
 </Project>

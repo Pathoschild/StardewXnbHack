@@ -72,6 +72,7 @@ on the wiki for the first-time setup.
 2. Compile it on Windows, and create a zip file like this:
     ```
     StardewXnbHack 1.0.0 for Windows.zip/
+       StardewXnbHack.deps.json
        StardewXnbHack.dll
        StardewXnbHack.exe
        StardewXnbHack.runtimeconfig.json
@@ -79,12 +80,16 @@ on the wiki for the first-time setup.
 3. Compile it on Linux or macOS, and create two zip files like this:
     ```
     StardewXnbHack 1.0.0 for Linux.zip/
+       StardewXnbHack.deps.json
        StardewXnbHack.dll
        StardewXnbHack.sh
+       StardewXnbHack.runtimeconfig.json
 
     StardewXnbHack 1.0.0 for macOS.zip/
+       StardewXnbHack.deps.json
        StardewXnbHack.command
        StardewXnbHack.dll
+       StardewXnbHack.runtimeconfig.json
     ```
 4. Post a release with all three zip files.
 

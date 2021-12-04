@@ -3,7 +3,7 @@
 # Release notes
 ## Upcoming release
 * Added .NET 5 installed check on Linux/macOS.
-* Fixed macOS launch error.
+* Fixed launch errors on macOS and Windows.
 
 ## 1.0.5
 Released 15 September 2021.
