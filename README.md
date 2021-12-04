@@ -64,34 +64,13 @@ Just launch the project via _Debug > Start Debugging_. It will run from your `bi
 should auto-detect your game folder and unpack its `Content` folder.
 
 ### Prepare a compiled release
-To prepare a crossplatform StardewXnbHack release, you'll need to compile it on two platforms. See
-[crossplatforming info](https://stardewvalleywiki.com/Modding:Modder_Guide/Test_and_Troubleshoot#Testing_on_all_platforms)
-on the wiki for the first-time setup.
+To prepare a crossplatform SMAPI release:
 
 1. Update the [semantic version](https://semver.org) in `StardewXnbHack.csproj`.
-2. Compile it on Windows, and create a zip file like this:
-    ```
-    StardewXnbHack 1.0.0 for Windows.zip/
-       StardewXnbHack.deps.json
-       StardewXnbHack.dll
-       StardewXnbHack.exe
-       StardewXnbHack.runtimeconfig.json
-    ```
-3. Compile it on Linux or macOS, and create two zip files like this:
-    ```
-    StardewXnbHack 1.0.0 for Linux.zip/
-       StardewXnbHack.deps.json
-       StardewXnbHack.dll
-       StardewXnbHack.sh
-       StardewXnbHack.runtimeconfig.json
-
-    StardewXnbHack 1.0.0 for macOS.zip/
-       StardewXnbHack.deps.json
-       StardewXnbHack.command
-       StardewXnbHack.dll
-       StardewXnbHack.runtimeconfig.json
-    ```
-4. Post a release with all three zip files.
+2. Run the `build-scripts/prepare-release-packages.sh` on Linux or macOS.  
+   _See the [equivalent documentation for SMAPI](https://github.com/Pathoschild/SMAPI/blob/develop/docs/technical/smapi.md#preparing-a-release)
+   for the first-time setup (including using WSL on Windows)._
+3. Release the zip files created in the root `bin` folder.
 
 ## See also
 * [Release notes](release-notes.md)

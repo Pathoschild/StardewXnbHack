@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29001.49
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StardewXnbHack", "StardewXnbHack\StardewXnbHack.csproj", "{F1512B6A-75A9-4425-B4EE-26D50E7075C8}"
 EndProject
@@ -13,6 +13,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{5EDB5467-B
 		LICENSE = LICENSE
 		README.md = README.md
 		release-notes.md = release-notes.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build-scripts", "build-scripts", "{26C61354-013D-4E87-ADD8-951C04FFB185}"
+	ProjectSection(SolutionItems) = preProject
+		build-scripts\prepare-release-packages.sh = build-scripts\prepare-release-packages.sh
 	EndProjectSection
 EndProject
 Global
@@ -28,6 +33,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{26C61354-013D-4E87-ADD8-951C04FFB185} = {5EDB5467-BFEE-4122-8764-FA41B4E59D7F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ED3F1CBF-3651-49A3-9652-9A8BCD952184}
