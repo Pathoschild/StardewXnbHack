@@ -8,7 +8,7 @@
     <Version>1.0.5</Version>
 
     <!--build-->
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Platforms>x64</Platforms>
     <OutputType>Exe</OutputType>
     <ApplicationIcon>assets/icon.ico</ApplicationIcon>
@@ -23,17 +23,12 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Pathoschild.Stardew.ModBuildConfig" Version="3.4.0" />
+    <PackageReference Include="Pathoschild.Stardew.ModBuildConfig" Version="4.0.0" />
     <PackageReference Include="Platonymous.TMXTile" Version="1.5.9" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="BmFont" HintPath="$(GamePath)\BmFont.dll" />
     <Reference Include="SMAPI.Toolkit" HintPath="$(GamePath)\smapi-internal\SMAPI.Toolkit.dll" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="assets\StardewXnbHack.deps.json" CopyToOutputDirectory="PreserveNewest" />
-    <None Update="assets\StardewXnbHack.runtimeconfig.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

@@ -22,8 +22,8 @@ cd "`dirname "$0"`/.."
 ##########
 echo "Clearing old builds..."
 echo "-----------------------"
-for path in */**/bin */**/obj; do
-    rm -rf $path
+for path in **/bin **/obj; do
+    rm -rf "$path"
 done
 rm -rf "bin"
 echo ""
@@ -46,14 +46,14 @@ for platform in ${platforms[@]}; do
     # constants
     runtime=${runtimes[$platform]}
     msbuildPlatformName=${msBuildPlatformNames[$platform]}
-    binPath="StardewXnbHack/bin/Release/net5.0/$runtime"
+    binPath="StardewXnbHack/bin/Release/net6.0/$runtime/publish"
     folderName="StardewXnbHack $version for $platform"
     bundlePath="bin/$folderName"
 
     # compile
     echo "Compiling for $platform..."
     echo "--------------------------"
-    dotnet publish StardewXnbHack --configuration $buildConfig -v minimal --runtime "$runtime" -p:OS="$msbuildPlatformName" -p:GamePath="$gamePath"
+    dotnet publish StardewXnbHack --configuration $buildConfig -v minimal --runtime "$runtime" -p:OS="$msbuildPlatformName" -p:GamePath="$gamePath" -p:PublishSingleFile=True --self-contained true
     echo ""
     echo ""
 
@@ -61,14 +61,9 @@ for platform in ${platforms[@]}; do
     echo "Preparing package for $platform..."
     echo "----------------------------------"
     mkdir "$bundlePath" --parents
-    cp "$binPath/assets/StardewXnbHack.deps.json" "$bundlePath"
-    cp "$binPath/assets/StardewXnbHack.runtimeconfig.json" "$bundlePath"
-    cp "$binPath/StardewXnbHack.dll" "$bundlePath"
+    cp "$binPath/StardewXnbHack"* "$bundlePath"
 
-    if [ "$platform" == "Windows" ]; then
-        cp "$binPath/StardewXnbHack.exe" "$bundlePath"
-    else
-        cp "$binPath/StardewXnbHack" "$bundlePath"
+    if [ -t "$bundlePath/StardewXnbHack" ]; then
         chmod 755 "$bundlePath/StardewXnbHack"
     fi
 

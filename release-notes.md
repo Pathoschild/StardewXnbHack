@@ -2,7 +2,7 @@
 
 # Release notes
 ## Upcoming release
-* Added .NET 5 installed check on Linux/macOS.
+* StardewXnbHack no longer needs .NET 5 to be installed.
 * Fixed launch errors on macOS and Windows.
 
 ## 1.0.5

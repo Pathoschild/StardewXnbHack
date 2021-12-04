@@ -10,15 +10,11 @@ To install it:
 2. From the [releases page](https://github.com/Pathoschild/StardewXnbHack/releases), download the
    `StardewXnbHack *.zip` file for your operating system under 'assets'.
 3. Unzip it into [your Stardew Valley folder](https://stardewvalleywiki.com/Modding:Game_folder),
-   so `StardewXnbHack.exe` is in the same folder as `Stardew Valley.exe`.
+   so `StardewXnbHack.exe` (Windows) or `StardewXnbHack` (Linux/macOS) is in the same folder as
+   `Stardew Valley.dll`.
 
-To unpack the entire `Content` folder into `Content (unpacked)` on...
-
-OS      | instruction
-------- | -----------
-Windows | double-click `StardewXnbHack.exe`.
-Linux   | execute `StardewXnbHack.sh`.
-macOS   | double-click `StardewXnbHack.command`.
+To unpack the entire `Content` folder into `Content (unpacked)`, just double-click on
+`StardewXnbHack.exe` (Windows) or `StardewXnbHack` (Linux/macOS).
 
 ## FAQs
 ### How does this compare to other XNB unpackers?
@@ -40,14 +36,6 @@ Sample unpack time<br />(full `Content` folder) | ≈0m 43s | ≈6m 5s | ≈2m 2
 License | MIT | GPL | n/a
 
 <sup>¹ `.tmx` is the [preferred map format](https://stardewvalleywiki.com/Modding:Maps#Map_formats), but you can open the `.tbin` file in Tiled and export it as `.tmx`.</sup>
-
-### On Linux, the console doesn't open or shows a "Magic number is wrong" error
-That's a [Mono bug with some terminals](https://github.com/mono/mono/issues/6752) in the version
-used by Stardew Valley. You can fix it by...
-
-* changing your default terminal to a supported one like xterm;
-* or opening a terminal in the game folder and launching the unpacker like this:
-  > export TERM=xterm &&./StardewXNBHack.sh
 
 ## For StardewXnbHack developers
 This section explains how to edit or compile StardewXnbHack from the source code. Most users should
