@@ -37,6 +37,25 @@ License | MIT | GPL | n/a
 
 <sup>¹ `.tmx` is the [preferred map format](https://stardewvalleywiki.com/Modding:Maps#Map_formats), but you can open the `.tbin` file in Tiled and export it as `.tmx`.</sup>
 
+### When I run StardewXnbHack, nothing happens or it quickly exits?
+That means it crashed for some reason. Here's how to see what the error is:
+
+<div style="margin-left:2em;">
+
+1. Find [your game folder](https://stardewvalleywiki.com/Modding:Game_folder).
+2. [Open a terminal in the game folder](https://www.groovypost.com/howto/open-command-window-terminal-window-specific-folder-windows-mac-linux/).
+3. Type this command:
+   * **Windows:** `StardewXnbHack.exe` (for Command Prompt) or `./StardewXnbHack.exe` (for PowerShell or Windows Terminal)
+   * **Linux or macOS:** `./StardewXnbHack`
+4. Press enter to run the command.
+
+That should run StardewXnbHack in the same terminal, and the window will stay open if it crashes.
+</div>
+
+You can ask for help in [#making-mods on the Stardew Valley Discord](https://stardewvalleywiki.com/Modding:Community#Discord).
+If you're sure it's a StardewXnbHack bug (and not a usage error), you can report it on the [issues
+page](https://github.com/Pathoschild/StardewXnbHack/issues).
+
 ## For StardewXnbHack developers
 This section explains how to edit or compile StardewXnbHack from the source code. Most users should
 [use the release version](#usage) instead.
