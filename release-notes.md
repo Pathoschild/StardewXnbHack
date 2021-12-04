@@ -1,14 +1,17 @@
 [← back to readme](README.md)
 
 # Release notes
-## Upcoming release
-* StardewXnbHack no longer needs .NET 5 to be installed.
+## 1.0.6
+Released 04 December 2021.
+
+* StardewXnbHack no longer needs .NET to be installed.
+* Updated to .NET 6.
 * Fixed launch errors on macOS and Windows.
 
 ## 1.0.5
 Released 15 September 2021.
 
-* Updated for Stardew Valley 1.5.5.
+* Updated for Stardew Valley 1.5.5 and .NET 5.
 * Fixed some textures not unpacked correctly on Linux/macOS.
 * Fixed _cannot be loaded into a Reach GraphicsDevice_ error for some users.
 
