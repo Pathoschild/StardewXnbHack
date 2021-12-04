@@ -267,7 +267,7 @@ namespace StardewXnbHack
             foreach (string relativePath in Program.RelativeAssemblyProbePaths)
             {
                 // get absolute path of search folder
-                string searchPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativePath);
+                string searchPath = Path.Combine(Path.GetDirectoryName(Environment.ProcessPath), relativePath);
                 if (!Directory.Exists(searchPath))
                     continue;
 

@@ -10,15 +10,11 @@ To install it:
 2. From the [releases page](https://github.com/Pathoschild/StardewXnbHack/releases), download the
    `StardewXnbHack *.zip` file for your operating system under 'assets'.
 3. Unzip it into [your Stardew Valley folder](https://stardewvalleywiki.com/Modding:Game_folder),
-   so `StardewXnbHack.exe` is in the same folder as `Stardew Valley.exe`.
+   so `StardewXnbHack.exe` (Windows) or `StardewXnbHack` (Linux/macOS) is in the same folder as
+   `Stardew Valley.dll`.
 
-To unpack the entire `Content` folder into `Content (unpacked)` on...
-
-OS      | instruction
-------- | -----------
-Windows | double-click `StardewXnbHack.exe`.
-Linux   | execute `StardewXnbHack.sh`.
-macOS   | double-click `StardewXnbHack.command`.
+To unpack the entire `Content` folder into `Content (unpacked)`, just double-click on
+`StardewXnbHack.exe` (Windows) or `StardewXnbHack` (Linux/macOS).
 
 ## FAQs
 ### How does this compare to other XNB unpackers?
@@ -41,13 +37,24 @@ License | MIT | GPL | n/a
 
 <sup>¹ `.tmx` is the [preferred map format](https://stardewvalleywiki.com/Modding:Maps#Map_formats), but you can open the `.tbin` file in Tiled and export it as `.tmx`.</sup>
 
-### On Linux, the console doesn't open or shows a "Magic number is wrong" error
-That's a [Mono bug with some terminals](https://github.com/mono/mono/issues/6752) in the version
-used by Stardew Valley. You can fix it by...
+### When I run StardewXnbHack, nothing happens or it quickly exits?
+That means it crashed for some reason. Here's how to see what the error is:
 
-* changing your default terminal to a supported one like xterm;
-* or opening a terminal in the game folder and launching the unpacker like this:
-  > export TERM=xterm &&./StardewXNBHack.sh
+<div style="margin-left:2em;">
+
+1. Find [your game folder](https://stardewvalleywiki.com/Modding:Game_folder).
+2. [Open a terminal in the game folder](https://www.groovypost.com/howto/open-command-window-terminal-window-specific-folder-windows-mac-linux/).
+3. Type this command:
+   * **Windows:** `StardewXnbHack.exe` (for Command Prompt) or `./StardewXnbHack.exe` (for PowerShell or Windows Terminal)
+   * **Linux or macOS:** `./StardewXnbHack`
+4. Press enter to run the command.
+
+That should run StardewXnbHack in the same terminal, and the window will stay open if it crashes.
+</div>
+
+You can ask for help in [#making-mods on the Stardew Valley Discord](https://stardewvalleywiki.com/Modding:Community#Discord).
+If you're sure it's a StardewXnbHack bug (and not a usage error), you can report it on the [issues
+page](https://github.com/Pathoschild/StardewXnbHack/issues).
 
 ## For StardewXnbHack developers
 This section explains how to edit or compile StardewXnbHack from the source code. Most users should
@@ -64,31 +71,13 @@ Just launch the project via _Debug > Start Debugging_. It will run from your `bi
 should auto-detect your game folder and unpack its `Content` folder.
 
 ### Prepare a compiled release
-To prepare a crossplatform StardewXnbHack release, you'll need to compile it on two platforms. See
-[crossplatforming info](https://stardewvalleywiki.com/Modding:Modder_Guide/Test_and_Troubleshoot#Testing_on_all_platforms)
-on the wiki for the first-time setup.
+To prepare a crossplatform SMAPI release:
 
 1. Update the [semantic version](https://semver.org) in `StardewXnbHack.csproj`.
-2. Compile it on Windows, and create a zip file like this:
-    ```
-    StardewXnbHack 1.0.0 for Windows.zip/
-       StardewXnbHack.dll
-       StardewXnbHack.exe
-       StardewXnbHack.runtimeconfig.json
-    ```
-3. Compile it on Linux or macOS, and create two zip files like this:
-    ```
-    StardewXnbHack 1.0.0 for Linux.zip/
-       StardewXnbHack
-       StardewXnbHack.dll
-       StardewXnbHack.sh
-
-    StardewXnbHack 1.0.0 for macOS.zip/
-       StardewXnbHack.command
-       StardewXnbHack
-       StardewXnbHack.dll
-    ```
-4. Post a release with all three zip files.
+2. Run the `build-scripts/prepare-release-packages.sh` on Linux or macOS.  
+   _See the [equivalent documentation for SMAPI](https://github.com/Pathoschild/SMAPI/blob/develop/docs/technical/smapi.md#preparing-a-release)
+   for the first-time setup (including using WSL on Windows)._
+3. Release the zip files created in the root `bin` folder.
 
 ## See also
 * [Release notes](release-notes.md)
