@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Xml.Linq;
 using StardewModdingAPI.Toolkit.Utilities;
 using StardewValley;
 using TMXTile;
@@ -69,8 +70,16 @@ namespace StardewXnbHack.Framework.Writers
             }
 
             // save file
-            using (Stream stream = File.Create($"{toPathWithoutExtension}.tmx"))
+            using (Stream stream = new MemoryStream())
+            {
+                // serialize to stream
                 this.Format.Store(map, stream, DataEncodingType.CSV);
+
+                // workaround: TMXTile doesn't indent the XML in newer .NET versions
+                stream.Position = 0;
+                var doc = XDocument.Load(stream);
+                File.WriteAllText($"{toPathWithoutExtension}.tmx", "<?xml version=\"1.0\"?>\n" + doc.ToString());
+            }
 
             // undo changes
             foreach (var layer in map.Layers)

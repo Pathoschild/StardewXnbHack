@@ -1,6 +1,9 @@
 [← back to readme](README.md)
 
 # Release notes
+## Upcoming release
+* Fixed exported `.tmx` files no longer indented.
+
 ## 1.0.6
 Released 04 December 2021.
 
