@@ -23,6 +23,7 @@ cd "`dirname "$0"`/.."
 echo "Clearing old builds..."
 echo "-----------------------"
 for path in **/bin **/obj; do
+    echo "$path"
     rm -rf "$path"
 done
 rm -rf "bin"
