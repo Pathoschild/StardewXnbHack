@@ -2,6 +2,7 @@
 
 # Release notes
 ## Upcoming release
+* Updated for Stardew Valley 1.6.
 * Added StardewXnbHack and game version to console output.
 * Data model properties marked with `[ContentSerializerIgnore]` are now omitted from output `.json` files.
 
