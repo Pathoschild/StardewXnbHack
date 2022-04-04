@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI.Toolkit.Utilities;
 using StardewValley;
@@ -33,6 +34,9 @@ namespace StardewXnbHack
         /// <summary>The console app entry method.</summary>
         internal static void Main()
         {
+            // set window title
+            Console.Title = $"StardewXnbHack {Program.GetUnpackerVersion()}";
+
             // check platform
             Program.AssertPlatform();
 
@@ -78,6 +82,7 @@ namespace StardewXnbHack
             // init logging
             UnpackContext context = new UnpackContext();
             IProgressLogger logger = new DefaultConsoleLogger(context, showPressAnyKeyToExit);
+            logger.OnStepChanged(ProgressStep.Started, $"Running StardewXnbHack {Program.GetUnpackerVersion()}.");
 
             try
             {
@@ -142,7 +147,7 @@ namespace StardewXnbHack
                 // unpack files
                 try
                 {
-                    logger.OnStepChanged(ProgressStep.UnpackingFiles, "Unpacking files...");
+                    logger.OnStepChanged(ProgressStep.UnpackingFiles, $"Unpacking files for Stardew Valley {Program.GetGameVersion()}...");
 
                     // collect files
                     DirectoryInfo contentDir = new DirectoryInfo(context.ContentPath);
@@ -340,6 +345,43 @@ namespace StardewXnbHack
                 parts.Add($"{time.Seconds:0} second{(time.Seconds > 1 ? "s" : "")}");
 
             return string.Join(" ", parts);
+        }
+
+        /// <summary>Get the version string for StardewXnbHack.</summary>
+        private static string GetUnpackerVersion()
+        {
+            var attribute = typeof(Program).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
+            return attribute?.InformationalVersion ?? "<unknown version>";
+        }
+
+        /// <summary>Get the version string for Stardew Valley.</summary>
+        private static string GetGameVersion()
+        {
+            StringBuilder version = new();
+
+            // base version
+            version.Append(Game1.version);
+            version.Append(" (");
+
+            // build number
+            {
+                string buildVersion = typeof(Game1).Assembly.GetName().Version?.ToString() ?? "unknown";
+                if (buildVersion.StartsWith($"{Game1.version}."))
+                    buildVersion = buildVersion.Substring(Game1.version.Length + 1);
+                version.Append(buildVersion);
+            }
+
+            // version label
+            if (!string.IsNullOrWhiteSpace(Game1.versionLabel))
+            {
+                version.Append(" \"");
+                version.Append(Game1.versionLabel);
+                version.Append('"');
+            }
+
+            version.Append(')');
+
+            return version.ToString();
         }
     }
 }

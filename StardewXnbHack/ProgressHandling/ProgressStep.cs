@@ -3,6 +3,9 @@ namespace StardewXnbHack.ProgressHandling
     /// <summary>A step in the overall unpack process.</summary>
     public enum ProgressStep
     {
+        /// <summary>The unpacker has started.</summary>
+        Started,
+
         /// <summary>The game folder was located, but unpacking hasn't started yet.</summary>
         GameFound,
 

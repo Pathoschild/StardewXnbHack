@@ -1,6 +1,9 @@
 [← back to readme](README.md)
 
 # Release notes
+## Upcoming release
+* Added StardewXnbHack and game version to console output.
+
 ## 1.0.7
 Released 28 December 2021.
 
