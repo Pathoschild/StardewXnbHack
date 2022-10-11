@@ -3,6 +3,7 @@
 # Release notes
 ## Upcoming release
 * Added StardewXnbHack and game version to console output.
+* Data model properties marked with `[ContentSerializerIgnore]` are now omitted from output `.json` files.
 
 ## 1.0.7
 Released 28 December 2021.
