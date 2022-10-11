@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using StardewModdingAPI.Toolkit.Serialization;
 using StardewModdingAPI.Toolkit.Utilities;
 
 namespace StardewXnbHack.Framework.Writers
@@ -6,6 +6,13 @@ namespace StardewXnbHack.Framework.Writers
     /// <summary>The base class for an asset writer.</summary>
     internal abstract class BaseAssetWriter : IAssetWriter
     {
+        /*********
+        ** Private methods
+        *********/
+        /// <summary>The underlying JSON helper preconfigured with serialization rules for Stardew Valley.</summary>
+        private readonly JsonHelper JsonHelper = new();
+
+
         /*********
         ** Public methods
         *********/
@@ -27,10 +34,10 @@ namespace StardewXnbHack.Framework.Writers
         ** Protected methods
         *********/
         /// <summary>Get a text representation for the given asset.</summary>
-        /// <param name="asset">The asset to serialise.</param>
+        /// <param name="asset">The asset to serialize.</param>
         protected string FormatData(object asset)
         {
-            return JsonConvert.SerializeObject(asset, Formatting.Indented);
+            return this.JsonHelper.Serialize(asset);
         }
 
         /// <summary>Get the recommended file extension for a data file formatted with <see cref="FormatData"/>.</summary>
