@@ -18,7 +18,10 @@ namespace StardewXnbHack.Framework.Writers
             Type type = asset.GetType();
             type = type.IsGenericType ? type.GetGenericTypeDefinition() : type;
 
-            return type == typeof(Dictionary<,>) || type == typeof(List<>);
+            return
+                type == typeof(Dictionary<,>)
+                || type == typeof(List<>)
+                || type.FullName?.StartsWith("StardewValley.GameData.") == true;
         }
 
         /// <summary>Write an asset instance to disk.</summary>
