@@ -1,9 +1,11 @@
 [← back to readme](README.md)
 
 # Release notes
-## Upcoming release
+## 1.0.8
+Released 19 March 2024.
+
 * Updated for Stardew Valley 1.6.
-* Added StardewXnbHack and game version to console output.
+* Added StardewXnbHack & game versions to console output.
 * Data model properties marked with `[ContentSerializerIgnore]` are now omitted from output `.json` files.
 
 ## 1.0.7
