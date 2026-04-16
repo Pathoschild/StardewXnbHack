@@ -182,9 +182,8 @@ public static class Program
                     // prepare paths
                     string assetName = file.FullName.Substring(context.ContentPath.Length + 1, file.FullName.Length - context.ContentPath.Length - 5); // remove root path + .xnb extension
 
-                    if (unlocalizedOnly && assetName[^6] == '.') // localized assets end with e.g. ".ja-JP" & unlocalized assets don't have a period, so this saves some string checking
-                        if (languageCodes.Any(code => assetName.EndsWith(code)))
-                            continue;
+                    if (unlocalizedOnly && languageCodes.Any(code => assetName.EndsWith(code)))
+                        continue;
 
                     string relativePath = $"{assetName}.xnb";
                     string fileExportPath = Path.Combine(context.ExportPath, assetName);
