@@ -93,9 +93,24 @@ public static class Program
 
             // read command-line arguments
             bool omitDefaultFields = args.Contains("--clean");
+            bool unlocalizedOnly = args.Contains("--unlocalized");
+
+            // the language codes to check for if unlocalizedOnly
+            HashSet<string> languageCodes = new HashSet<string>
+            {
+                "ja-JP", "ru-RU", "zh-CN",
+                "pt-BR", "es-ES", "de-DE",
+                "th-TH", "fr-FR", "ko-KR",
+                "it-IT", "tr-TR", "hu-HU"
+            };
 
             // start log
-            logger.OnStepChanged(ProgressStep.Started, $"Running StardewXnbHack {Program.GetUnpackerVersion()}.{(omitDefaultFields ? " Special options: omit default fields." : "")}");
+            List<string> specialOptions = new();
+            if (omitDefaultFields)
+                specialOptions.Add("omit default fields");
+            if (unlocalizedOnly)
+                specialOptions.Add("English assets only");
+            logger.OnStepChanged(ProgressStep.Started, $"Running StardewXnbHack {Program.GetUnpackerVersion()}.{(specialOptions.Any() ? $" Special options: {string.Join(", ", specialOptions)}" : "")}");
 
             // start timer
             Stopwatch timer = new Stopwatch();
@@ -166,6 +181,10 @@ public static class Program
                 {
                     // prepare paths
                     string assetName = file.FullName.Substring(context.ContentPath.Length + 1, file.FullName.Length - context.ContentPath.Length - 5); // remove root path + .xnb extension
+
+                    if (unlocalizedOnly && languageCodes.Any(code => assetName.EndsWith(code)))
+                        continue;
+
                     string relativePath = $"{assetName}.xnb";
                     string fileExportPath = Path.Combine(context.ExportPath, assetName);
                     Directory.CreateDirectory(Path.GetDirectoryName(fileExportPath));
